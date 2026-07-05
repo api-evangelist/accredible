@@ -1,0 +1,125 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Accredible
+providerId: accredible
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Digital Credentials
+- Certificates
+- Badges
+- Credentialing
+- Plans
+description: >-
+  Accredible is priced by the number of unique recipients per year, not by the
+  number of credentials - an organization can issue unlimited certificates and
+  badges to each unique recipient within its annual allowance. The self-service
+  entry tier is Launch (list price around $45/month on a 12-month commitment,
+  starting at 50 unique recipients). Higher tiers - Connect and Growth - add
+  automation, integrations, brand control, and hands-on support and are sold at
+  custom pricing that scales with recipient volume. Enterprise-style
+  arrangements (white-label, SSO, SLAs) are negotiated. The API is included in
+  the platform subscription; there is no separate per-API-call charge.
+notes: >-
+  Public tier names and the Launch entry price were read from accredible.com
+  pricing and third-party marketplaces; Connect, Growth, and enterprise pricing
+  are quote-based and were not published as fixed numbers. Verify current tiers,
+  recipient allowances, and prices on the Accredible pricing page during
+  reconciliation.
+sources:
+- https://www.accredible.com/pricing
+- https://help.accredible.com/how-much-does-accredible-cost
+- https://docs.api.accredible.com/
+plans:
+- id: accredible-launch
+  name: Launch
+  type: paid
+  description: >-
+    Self-service entry tier for smaller programs. Includes digital certificate
+    and badge issuing, hosted verification pages, basic branding, and full API
+    access. Priced per unique recipient per year starting around 50 recipients,
+    billed monthly on an annual commitment.
+  entries:
+  - label: Unique Recipients
+    name: launch_recipients
+    type: usage
+    metric: recipients
+    limit: 50
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: from ~$45/month (annual commitment; scales with recipient count)
+    userMultiplied: false
+  elements:
+  - name: Digital Certificates and Badges
+  - name: Hosted Verification Pages
+  - name: Full API Access
+  - name: Basic Branding
+- id: accredible-connect
+  name: Connect
+  type: usage
+  description: >-
+    For growing programs that need automation, integrations, and hands-on
+    support. Custom recipient allowance and pricing.
+  entries:
+  - label: Unique Recipients
+    name: connect_recipients
+    type: usage
+    metric: recipients
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: custom (contact sales)
+    userMultiplied: false
+  elements:
+  - name: Automation and Integrations
+  - name: Hands-On Support
+  - name: API and Webhooks-Style Integrations
+- id: accredible-growth
+  name: Growth
+  type: usage
+  description: >-
+    For high-volume programs that demand brand control and measurable growth.
+    Custom recipient allowance and pricing.
+  entries:
+  - label: Unique Recipients
+    name: growth_recipients
+    type: usage
+    metric: recipients
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: custom (contact sales)
+    userMultiplied: false
+  elements:
+  - name: Advanced Brand Control
+  - name: Analytics and Growth Tooling
+  - name: Priority Support
+- id: accredible-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Negotiated agreements for the largest issuers - white-label credentials,
+    SSO, department management, SLAs, and security review.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: White-Label Credentials
+  - name: SSO and Department Management
+  - name: SLAs and Security Review
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

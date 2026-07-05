@@ -1,0 +1,458 @@
+{
+  "info": {
+    "name": "Accredible API",
+    "description": "Issue, manage, and verify digital credentials (certificates and Open Badges) with Accredible. Base URL: https://api.accredible.com/v1 (sandbox: https://sandbox.api.accredible.com/v1). Authenticate with an API key in the Authorization header using the scheme `Token token=YOUR_API_KEY`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "Authorization", "type": "string" },
+      { "key": "value", "value": "Token token={{apiKey}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.accredible.com/v1", "type": "string" },
+    { "key": "apiKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Credentials",
+      "item": [
+        {
+          "name": "Create a credential",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"credential\": {\n    \"recipient\": { \"name\": \"Jane Doe\", \"email\": \"jane@example.com\" },\n    \"group_id\": 12345,\n    \"name\": \"Course Name\",\n    \"issued_on\": \"05/07/2026\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials", "host": ["{{baseUrl}}"], "path": ["credentials"] },
+            "description": "Issues a new credential to a recipient against a Group."
+          }
+        },
+        {
+          "name": "Bulk create credentials",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"credentials\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/bulk_create", "host": ["{{baseUrl}}"], "path": ["credentials", "bulk_create"] },
+            "description": "Issues many credentials in a single request."
+          }
+        },
+        {
+          "name": "View a credential",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:id", "host": ["{{baseUrl}}"], "path": ["credentials", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Retrieves a single credential by ID."
+          }
+        },
+        {
+          "name": "Update a credential",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"credential\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/:id", "host": ["{{baseUrl}}"], "path": ["credentials", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates an existing credential."
+          }
+        },
+        {
+          "name": "Delete a credential",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:id", "host": ["{{baseUrl}}"], "path": ["credentials", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Deletes a credential by ID."
+          }
+        },
+        {
+          "name": "Search for credentials",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"group_id\": 12345,\n  \"page\": 1,\n  \"page_size\": 50\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/search", "host": ["{{baseUrl}}"], "path": ["credentials", "search"] },
+            "description": "Searches credentials by group, recipient, and other attributes."
+          }
+        },
+        {
+          "name": "Generate PDFs for credentials",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"credential_ids\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/generate_pdf", "host": ["{{baseUrl}}"], "path": ["credentials", "generate_pdf"] },
+            "description": "Generates certificate PDFs for a set of credentials."
+          }
+        },
+        {
+          "name": "Generate PDF for a single credential",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/generate_single_pdf/:id", "host": ["{{baseUrl}}"], "path": ["credentials", "generate_single_pdf", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Generates a certificate PDF for one credential."
+          }
+        },
+        {
+          "name": "Verify blockchain credential",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/blockchain_data/:encoded_id", "host": ["{{baseUrl}}"], "path": ["credentials", "blockchain_data", ":encoded_id"], "variable": [{ "key": "encoded_id", "value": "" }] },
+            "description": "Returns the blockchain verification record for an encoded credential ID."
+          }
+        },
+        {
+          "name": "View credential analytics",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/analytics/:id", "host": ["{{baseUrl}}"], "path": ["credentials", "analytics", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns engagement analytics for a single credential."
+          }
+        },
+        {
+          "name": "Credential redirect",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/issuer/credential_redirect?id=", "host": ["{{baseUrl}}"], "path": ["issuer", "credential_redirect"], "query": [{ "key": "id", "value": "" }] },
+            "description": "Resolves and redirects to a credential's public page."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Groups",
+      "item": [
+        {
+          "name": "Create a group",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"group\": {\n    \"name\": \"internal-name\",\n    \"course_name\": \"Course Name\",\n    \"course_description\": \"Description\",\n    \"design_id\": 0\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/issuer/groups", "host": ["{{baseUrl}}"], "path": ["issuer", "groups"] },
+            "description": "Creates a new Group (course or achievement)."
+          }
+        },
+        {
+          "name": "View a group",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/issuer/groups/:group_id", "host": ["{{baseUrl}}"], "path": ["issuer", "groups", ":group_id"], "variable": [{ "key": "group_id", "value": "" }] },
+            "description": "Retrieves a single Group by ID."
+          }
+        },
+        {
+          "name": "Update a group",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"group\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/issuer/groups/:group_id", "host": ["{{baseUrl}}"], "path": ["issuer", "groups", ":group_id"], "variable": [{ "key": "group_id", "value": "" }] },
+            "description": "Updates an existing Group."
+          }
+        },
+        {
+          "name": "Delete a group",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/issuer/groups/:group_id", "host": ["{{baseUrl}}"], "path": ["issuer", "groups", ":group_id"], "variable": [{ "key": "group_id", "value": "" }] },
+            "description": "Deletes a Group by ID."
+          }
+        },
+        {
+          "name": "Search for groups",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"\",\n  \"page\": 1,\n  \"page_size\": 50\n}" },
+            "url": { "raw": "{{baseUrl}}/issuer/groups/search", "host": ["{{baseUrl}}"], "path": ["issuer", "groups", "search"] },
+            "description": "Searches Groups by name and other attributes."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Designs",
+      "item": [
+        {
+          "name": "Create a design",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"design\": {\n    \"name\": \"My Design\",\n    \"kind\": \"certificate\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/designs", "host": ["{{baseUrl}}"], "path": ["designs"] },
+            "description": "Creates a new visual Design for badges or certificates."
+          }
+        },
+        {
+          "name": "View a design",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designs/:design_id", "host": ["{{baseUrl}}"], "path": ["designs", ":design_id"], "variable": [{ "key": "design_id", "value": "" }] },
+            "description": "Retrieves a single Design by ID."
+          }
+        },
+        {
+          "name": "Update a design",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"design\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/designs/:design_id", "host": ["{{baseUrl}}"], "path": ["designs", ":design_id"], "variable": [{ "key": "design_id", "value": "" }] },
+            "description": "Updates an existing Design."
+          }
+        },
+        {
+          "name": "Delete a design",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designs/:design_id", "host": ["{{baseUrl}}"], "path": ["designs", ":design_id"], "variable": [{ "key": "design_id", "value": "" }] },
+            "description": "Deletes a Design by ID."
+          }
+        },
+        {
+          "name": "Copy a design",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designs/:design_id/copy", "host": ["{{baseUrl}}"], "path": ["designs", ":design_id", "copy"], "variable": [{ "key": "design_id", "value": "" }] },
+            "description": "Creates a duplicate of an existing Design."
+          }
+        },
+        {
+          "name": "Search for designs",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"\",\n  \"kind\": \"certificate\"\n}" },
+            "url": { "raw": "{{baseUrl}}/designs/search", "host": ["{{baseUrl}}"], "path": ["designs", "search"] },
+            "description": "Searches Designs by name, kind, and other attributes."
+          }
+        },
+        {
+          "name": "Preview a design",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designs/:design_id/preview", "host": ["{{baseUrl}}"], "path": ["designs", ":design_id", "preview"], "variable": [{ "key": "design_id", "value": "" }] },
+            "description": "Renders a preview image of a Design with sample data."
+          }
+        },
+        {
+          "name": "Initialize embedded badge designer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designers/badge/initialize", "host": ["{{baseUrl}}"], "path": ["designers", "badge", "initialize"] },
+            "description": "Returns a session for the embedded badge designer experience."
+          }
+        },
+        {
+          "name": "Initialize embedded certificate designer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/designers/certificate/initialize", "host": ["{{baseUrl}}"], "path": ["designers", "certificate", "initialize"] },
+            "description": "Returns a session for the embedded certificate designer experience."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evidence Items",
+      "item": [
+        {
+          "name": "Create an evidence item",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"evidence_item\": {\n    \"description\": \"Work sample\",\n    \"category\": \"file\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/evidence_items", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "evidence_items"], "variable": [{ "key": "credential_id", "value": "" }] },
+            "description": "Attaches a new Evidence Item to a credential."
+          }
+        },
+        {
+          "name": "View an evidence item",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/evidence_items/:evidence_item_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "evidence_items", ":evidence_item_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "evidence_item_id", "value": "" }] },
+            "description": "Retrieves a single Evidence Item on a credential."
+          }
+        },
+        {
+          "name": "Update an evidence item",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"evidence_item\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/evidence_items/:evidence_item_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "evidence_items", ":evidence_item_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "evidence_item_id", "value": "" }] },
+            "description": "Updates an Evidence Item on a credential."
+          }
+        },
+        {
+          "name": "Delete an evidence item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/evidence_items/:evidence_item_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "evidence_items", ":evidence_item_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "evidence_item_id", "value": "" }] },
+            "description": "Deletes an Evidence Item from a credential."
+          }
+        }
+      ]
+    },
+    {
+      "name": "References",
+      "item": [
+        {
+          "name": "Create a reference",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"reference\": {\n    \"name\": \"Manager Name\",\n    \"email\": \"manager@example.com\",\n    \"body\": \"Endorsement text\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/references", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "references"], "variable": [{ "key": "credential_id", "value": "" }] },
+            "description": "Attaches a new Reference (endorsement) to a credential."
+          }
+        },
+        {
+          "name": "View a reference",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/references/:reference_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "references", ":reference_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "reference_id", "value": "" }] },
+            "description": "Retrieves a single Reference on a credential."
+          }
+        },
+        {
+          "name": "Update a reference",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"reference\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/references/:reference_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "references", ":reference_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "reference_id", "value": "" }] },
+            "description": "Updates a Reference on a credential."
+          }
+        },
+        {
+          "name": "Delete a reference",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/credentials/:credential_id/references/:reference_id", "host": ["{{baseUrl}}"], "path": ["credentials", ":credential_id", "references", ":reference_id"], "variable": [{ "key": "credential_id", "value": "" }, { "key": "reference_id", "value": "" }] },
+            "description": "Deletes a Reference from a credential."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Index analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/analytics", "host": ["{{baseUrl}}"], "path": ["analytics"] },
+            "description": "Returns issuer-level engagement analytics across credentials."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Departments and Team Members",
+      "item": [
+        {
+          "name": "Search for departments",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/departments/search", "host": ["{{baseUrl}}"], "path": ["departments", "search"] },
+            "description": "Searches Departments - independent sub-organizations."
+          }
+        },
+        {
+          "name": "Create a team member",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"team_member\": {\n    \"name\": \"Admin Name\",\n    \"email\": \"admin@example.com\",\n    \"role\": \"admin\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/team_members", "host": ["{{baseUrl}}"], "path": ["team_members"] },
+            "description": "Adds a new Team Member to the issuer account."
+          }
+        },
+        {
+          "name": "View a team member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/team_members/:id", "host": ["{{baseUrl}}"], "path": ["team_members", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Retrieves a single Team Member by ID."
+          }
+        },
+        {
+          "name": "Update a team member",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"team_member\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/team_members/:id", "host": ["{{baseUrl}}"], "path": ["team_members", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates a Team Member's details or role."
+          }
+        },
+        {
+          "name": "Delete a team member",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/team_members/:id", "host": ["{{baseUrl}}"], "path": ["team_members", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Removes a Team Member from the issuer account."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Issuer and SSO",
+      "item": [
+        {
+          "name": "View an issuer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/issuer/details", "host": ["{{baseUrl}}"], "path": ["issuer", "details"] },
+            "description": "Returns details about the authenticated issuer account."
+          }
+        },
+        {
+          "name": "Generate recipient SSO link",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"recipient_email\": \"jane@example.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/sso/generate_link", "host": ["{{baseUrl}}"], "path": ["sso", "generate_link"] },
+            "description": "Generates a single sign-on link for a recipient."
+          }
+        },
+        {
+          "name": "Update API key",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/generate_token", "host": ["{{baseUrl}}"], "path": ["api", "generate_token"] },
+            "description": "Rotates the API token for the issuer account."
+          }
+        }
+      ]
+    }
+  ]
+}

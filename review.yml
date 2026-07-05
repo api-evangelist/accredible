@@ -1,0 +1,124 @@
+aid: accredible
+name: Accredible
+review:
+  question: Does Accredible expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Accredible's public developer surface is
+    a request/response REST API over HTTPS (base https://api.accredible.com/v1,
+    with a sandbox at https://sandbox.api.accredible.com/v1). Nothing in the
+    published API reference describes a WebSocket (ws:// or wss://) endpoint,
+    server-sent events, or any other server-push transport on Accredible's own
+    API, so there is no realtime protocol surface to model.
+findings:
+  summary: |
+    Accredible does not publish a documented public WebSocket API. Accredible is
+    a digital credentialing platform for issuing, managing, and verifying
+    digital certificates and Open Badges. Its public API is a pure
+    request/response REST API over HTTPS at base https://api.accredible.com/v1
+    (sandbox https://sandbox.api.accredible.com/v1), authenticated with an API
+    key sent in the Authorization header using the scheme
+    `Token token=YOUR_API_KEY`. Resources cover Credentials (create, bulk
+    create, view, update, delete, search, PDF generation, blockchain
+    verification, redirect, analytics), Groups, Designs (including embedded
+    badge and certificate designer initialization), Evidence Items, References,
+    Departments, Team Members, Analytics, Issuer details, and recipient SSO link
+    generation. No realtime, bidirectional, or streaming WebSocket endpoint is
+    documented anywhere in Accredible's API reference as of the review date.
+  openSource: |
+    Accredible is a proprietary, hosted SaaS platform; the credentialing engine
+    is not open source. Accredible maintains a public GitHub organization
+    (github.com/accredible) that has historically hosted its API documentation
+    (the api-documentation repository, formerly published via Apiary), but the
+    platform itself is closed source and consumed only as a managed service.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.accredible.com/v1
+      documented: true
+      note: Primary public API. Production base; sandbox at sandbox.api.accredible.com/v1. API-key auth via Authorization header.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Accredible's API reference as of the review date.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No server-sent events surface is documented.
+  endpointsConfirmedRest:
+    - POST   https://api.accredible.com/v1/credentials
+    - POST   https://api.accredible.com/v1/credentials/bulk_create
+    - GET    https://api.accredible.com/v1/credentials/{id}
+    - PUT    https://api.accredible.com/v1/credentials/{id}
+    - DELETE https://api.accredible.com/v1/credentials/{id}
+    - POST   https://api.accredible.com/v1/credentials/search
+    - GET    https://api.accredible.com/v1/all_credentials
+    - POST   https://api.accredible.com/v1/credentials/generate_pdf
+    - POST   https://api.accredible.com/v1/credentials/generate_single_pdf/{id}
+    - GET    https://api.accredible.com/v1/credentials/blockchain_data/{encoded_id}
+    - POST   https://api.accredible.com/v1/credentials/analytics/{id}
+    - GET    https://api.accredible.com/v1/issuer/credential_redirect
+    - POST   https://api.accredible.com/v1/issuer/groups
+    - GET    https://api.accredible.com/v1/issuer/groups/{group_id}
+    - PUT    https://api.accredible.com/v1/issuer/groups/{group_id}
+    - DELETE https://api.accredible.com/v1/issuer/groups/{group_id}
+    - GET    https://api.accredible.com/v1/issuer/all_groups
+    - POST   https://api.accredible.com/v1/issuer/groups/search
+    - GET    https://api.accredible.com/v1/designs
+    - POST   https://api.accredible.com/v1/designs
+    - GET    https://api.accredible.com/v1/designs/{design_id}
+    - PUT    https://api.accredible.com/v1/designs/{design_id}
+    - DELETE https://api.accredible.com/v1/designs/{design_id}
+    - POST   https://api.accredible.com/v1/designs/{design_id}/copy
+    - POST   https://api.accredible.com/v1/designs/search
+    - POST   https://api.accredible.com/v1/designs/{design_id}/preview
+    - POST   https://api.accredible.com/v1/designers/badge/initialize
+    - POST   https://api.accredible.com/v1/designers/certificate/initialize
+    - POST   https://api.accredible.com/v1/departments/search
+    - POST   https://api.accredible.com/v1/credentials/{credential_id}/evidence_items
+    - GET    https://api.accredible.com/v1/credentials/{credential_id}/evidence_items/{evidence_item_id}
+    - PUT    https://api.accredible.com/v1/credentials/{credential_id}/evidence_items/{evidence_item_id}
+    - DELETE https://api.accredible.com/v1/credentials/{credential_id}/evidence_items/{evidence_item_id}
+    - POST   https://api.accredible.com/v1/credentials/{credential_id}/references
+    - GET    https://api.accredible.com/v1/credentials/{credential_id}/references/{reference_id}
+    - PUT    https://api.accredible.com/v1/credentials/{credential_id}/references/{reference_id}
+    - DELETE https://api.accredible.com/v1/credentials/{credential_id}/references/{reference_id}
+    - GET    https://api.accredible.com/v1/analytics
+    - POST   https://api.accredible.com/v1/team_members
+    - GET    https://api.accredible.com/v1/team_members/{id}
+    - PUT    https://api.accredible.com/v1/team_members/{id}
+    - DELETE https://api.accredible.com/v1/team_members/{id}
+    - GET    https://api.accredible.com/v1/issuer/details
+    - POST   https://api.accredible.com/v1/sso/generate_link
+    - POST   https://api.accredible.com/v1/api/generate_token
+  endpointsModeled:
+    - note: >-
+        Request and response bodies in the OpenAPI (credential, group, design,
+        evidence_item, reference, team_member schemas) are modeled and
+        simplified from the field lists in Accredible's API reference. Paths and
+        HTTP methods are confirmed; full payload schemas should be verified
+        against the live documentation before production use.
+sources:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+    note: Current live API reference. REST only; no WebSocket surface described.
+  - url: https://github.com/accredible/api-documentation
+    type: SourceCode
+    note: Public API documentation repository (release/1.25.0 branch carries the full Apiary blueprint with every endpoint).
+  - url: https://help.accredible.com/hc/en-us/articles/115003470989-What-are-the-API-endpoints-
+    type: Documentation
+    note: Confirms production (api.accredible.com) and sandbox (sandbox.api.accredible.com) base URLs.
+  - url: https://help.accredible.com/s/article/api-faq
+    type: Documentation
+    note: API and integration FAQ; API-key (header token) authentication.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or other server-push protocol surface exists on Accredible's
+    own API - the public interface is request/response REST over HTTPS. No
+    AsyncAPI document was created because there is no realtime transport to
+    model.

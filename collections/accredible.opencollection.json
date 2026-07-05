@@ -1,0 +1,458 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "apikey": {
+        "key": "Authorization",
+        "value": "Token token={{apiKey}}",
+        "in": "header"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Credentials", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a credential", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials",
+            "body": { "type": "json", "data": "{\"credential\":{\"recipient\":{\"name\":\"Jane Doe\",\"email\":\"jane@example.com\"},\"group_id\":12345}}" }
+          },
+          "docs": "Issues a new credential to a recipient against a Group."
+        },
+        {
+          "info": { "name": "Bulk create credentials", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/bulk_create",
+            "body": { "type": "json", "data": "{\"credentials\":[]}" }
+          },
+          "docs": "Issues many credentials in a single request."
+        },
+        {
+          "info": { "name": "View a credential", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/credentials/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The credential ID." }]
+          },
+          "docs": "Retrieves a single credential by ID."
+        },
+        {
+          "info": { "name": "Update a credential", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/credentials/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The credential ID." }],
+            "body": { "type": "json", "data": "{\"credential\":{}}" }
+          },
+          "docs": "Updates an existing credential."
+        },
+        {
+          "info": { "name": "Delete a credential", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/credentials/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The credential ID." }]
+          },
+          "docs": "Deletes a credential by ID."
+        },
+        {
+          "info": { "name": "Search for credentials", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/search",
+            "body": { "type": "json", "data": "{\"group_id\":12345,\"page\":1,\"page_size\":50}" }
+          },
+          "docs": "Searches credentials by group, recipient, and other attributes."
+        },
+        {
+          "info": { "name": "Generate PDFs for credentials", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/generate_pdf",
+            "body": { "type": "json", "data": "{\"credential_ids\":[]}" }
+          },
+          "docs": "Generates certificate PDFs for a set of credentials."
+        },
+        {
+          "info": { "name": "Generate PDF for a single credential", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/generate_single_pdf/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The credential ID." }]
+          },
+          "docs": "Generates a certificate PDF for one credential."
+        },
+        {
+          "info": { "name": "Verify blockchain credential", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/credentials/blockchain_data/:encoded_id",
+            "params": [{ "name": "encoded_id", "value": "", "type": "path", "description": "The encoded credential ID." }]
+          },
+          "docs": "Returns the blockchain verification record for an encoded credential ID."
+        },
+        {
+          "info": { "name": "View credential analytics", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/analytics/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The credential ID." }]
+          },
+          "docs": "Returns engagement analytics for a single credential."
+        },
+        {
+          "info": { "name": "Credential redirect", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/issuer/credential_redirect",
+            "params": [{ "name": "id", "value": "", "type": "query", "description": "The credential ID." }]
+          },
+          "docs": "Resolves and redirects to a credential's public page."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Groups", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a group", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/issuer/groups",
+            "body": { "type": "json", "data": "{\"group\":{\"name\":\"internal-name\",\"course_name\":\"Course Name\"}}" }
+          },
+          "docs": "Creates a new Group (course or achievement)."
+        },
+        {
+          "info": { "name": "View a group", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/issuer/groups/:group_id",
+            "params": [{ "name": "group_id", "value": "", "type": "path", "description": "The group ID." }]
+          },
+          "docs": "Retrieves a single Group by ID."
+        },
+        {
+          "info": { "name": "Update a group", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/issuer/groups/:group_id",
+            "params": [{ "name": "group_id", "value": "", "type": "path", "description": "The group ID." }],
+            "body": { "type": "json", "data": "{\"group\":{}}" }
+          },
+          "docs": "Updates an existing Group."
+        },
+        {
+          "info": { "name": "Delete a group", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/issuer/groups/:group_id",
+            "params": [{ "name": "group_id", "value": "", "type": "path", "description": "The group ID." }]
+          },
+          "docs": "Deletes a Group by ID."
+        },
+        {
+          "info": { "name": "Search for groups", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/issuer/groups/search",
+            "body": { "type": "json", "data": "{\"name\":\"\",\"page\":1,\"page_size\":50}" }
+          },
+          "docs": "Searches Groups by name and other attributes."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Designs", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a design", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs",
+            "body": { "type": "json", "data": "{\"design\":{\"name\":\"My Design\",\"kind\":\"certificate\"}}" }
+          },
+          "docs": "Creates a new visual Design for badges or certificates."
+        },
+        {
+          "info": { "name": "View a design", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [{ "name": "design_id", "value": "", "type": "path", "description": "The design ID." }]
+          },
+          "docs": "Retrieves a single Design by ID."
+        },
+        {
+          "info": { "name": "Update a design", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [{ "name": "design_id", "value": "", "type": "path", "description": "The design ID." }],
+            "body": { "type": "json", "data": "{\"design\":{}}" }
+          },
+          "docs": "Updates an existing Design."
+        },
+        {
+          "info": { "name": "Delete a design", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [{ "name": "design_id", "value": "", "type": "path", "description": "The design ID." }]
+          },
+          "docs": "Deletes a Design by ID."
+        },
+        {
+          "info": { "name": "Copy a design", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/:design_id/copy",
+            "params": [{ "name": "design_id", "value": "", "type": "path", "description": "The design ID." }]
+          },
+          "docs": "Creates a duplicate of an existing Design."
+        },
+        {
+          "info": { "name": "Search for designs", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/search",
+            "body": { "type": "json", "data": "{\"name\":\"\",\"kind\":\"certificate\"}" }
+          },
+          "docs": "Searches Designs by name, kind, and other attributes."
+        },
+        {
+          "info": { "name": "Preview a design", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/:design_id/preview",
+            "params": [{ "name": "design_id", "value": "", "type": "path", "description": "The design ID." }]
+          },
+          "docs": "Renders a preview image of a Design with sample data."
+        },
+        {
+          "info": { "name": "Initialize embedded badge designer", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designers/badge/initialize"
+          },
+          "docs": "Returns a session for the embedded badge designer experience."
+        },
+        {
+          "info": { "name": "Initialize embedded certificate designer", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designers/certificate/initialize"
+          },
+          "docs": "Returns a session for the embedded certificate designer experience."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Evidence Items", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create an evidence item", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/evidence_items",
+            "params": [{ "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." }],
+            "body": { "type": "json", "data": "{\"evidence_item\":{\"description\":\"Work sample\"}}" }
+          },
+          "docs": "Attaches a new Evidence Item to a credential."
+        },
+        {
+          "info": { "name": "View an evidence item", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/evidence_items/:evidence_item_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "evidence_item_id", "value": "", "type": "path", "description": "The evidence item ID." }
+            ]
+          },
+          "docs": "Retrieves a single Evidence Item on a credential."
+        },
+        {
+          "info": { "name": "Update an evidence item", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/evidence_items/:evidence_item_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "evidence_item_id", "value": "", "type": "path", "description": "The evidence item ID." }
+            ],
+            "body": { "type": "json", "data": "{\"evidence_item\":{}}" }
+          },
+          "docs": "Updates an Evidence Item on a credential."
+        },
+        {
+          "info": { "name": "Delete an evidence item", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/evidence_items/:evidence_item_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "evidence_item_id", "value": "", "type": "path", "description": "The evidence item ID." }
+            ]
+          },
+          "docs": "Deletes an Evidence Item from a credential."
+        }
+      ]
+    },
+    {
+      "info": { "name": "References", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a reference", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references",
+            "params": [{ "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." }],
+            "body": { "type": "json", "data": "{\"reference\":{\"name\":\"Manager\",\"email\":\"manager@example.com\",\"body\":\"Endorsement\"}}" }
+          },
+          "docs": "Attaches a new Reference (endorsement) to a credential."
+        },
+        {
+          "info": { "name": "View a reference", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "reference_id", "value": "", "type": "path", "description": "The reference ID." }
+            ]
+          },
+          "docs": "Retrieves a single Reference on a credential."
+        },
+        {
+          "info": { "name": "Update a reference", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "reference_id", "value": "", "type": "path", "description": "The reference ID." }
+            ],
+            "body": { "type": "json", "data": "{\"reference\":{}}" }
+          },
+          "docs": "Updates a Reference on a credential."
+        },
+        {
+          "info": { "name": "Delete a reference", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              { "name": "credential_id", "value": "", "type": "path", "description": "The credential ID." },
+              { "name": "reference_id", "value": "", "type": "path", "description": "The reference ID." }
+            ]
+          },
+          "docs": "Deletes a Reference from a credential."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Analytics", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Index analytics", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/analytics"
+          },
+          "docs": "Returns issuer-level engagement analytics across credentials."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Departments and Team Members", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Search for departments", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/departments/search",
+            "body": { "type": "json", "data": "{\"name\":\"\"}" }
+          },
+          "docs": "Searches Departments - independent sub-organizations."
+        },
+        {
+          "info": { "name": "Create a team member", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/team_members",
+            "body": { "type": "json", "data": "{\"team_member\":{\"name\":\"Admin\",\"email\":\"admin@example.com\",\"role\":\"admin\"}}" }
+          },
+          "docs": "Adds a new Team Member to the issuer account."
+        },
+        {
+          "info": { "name": "View a team member", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The team member ID." }]
+          },
+          "docs": "Retrieves a single Team Member by ID."
+        },
+        {
+          "info": { "name": "Update a team member", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The team member ID." }],
+            "body": { "type": "json", "data": "{\"team_member\":{}}" }
+          },
+          "docs": "Updates a Team Member's details or role."
+        },
+        {
+          "info": { "name": "Delete a team member", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [{ "name": "id", "value": "", "type": "path", "description": "The team member ID." }]
+          },
+          "docs": "Removes a Team Member from the issuer account."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Issuer and SSO", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "View an issuer", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/issuer/details"
+          },
+          "docs": "Returns details about the authenticated issuer account."
+        },
+        {
+          "info": { "name": "Generate recipient SSO link", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/sso/generate_link",
+            "body": { "type": "json", "data": "{\"recipient_email\":\"jane@example.com\"}" }
+          },
+          "docs": "Generates a single sign-on link for a recipient."
+        },
+        {
+          "info": { "name": "Update API key", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/api/generate_token"
+          },
+          "docs": "Rotates the API token for the issuer account."
+        }
+      ]
+    }
+  ]
+}

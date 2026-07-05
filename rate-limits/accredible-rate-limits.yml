@@ -1,0 +1,70 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Accredible
+providerId: accredible
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Digital Credentials
+- Certificates
+- Badges
+- Rate Limiting
+- Quotas
+description: >-
+  Accredible does not publish fixed numeric rate limits for its REST API in the
+  public API reference. The practical governor on issuance volume is the plan's
+  annual unique-recipient allowance rather than a per-minute request cap.
+  Clients should treat the API as rate-limited in principle - implement
+  exponential backoff, honor any Retry-After header, and prefer the bulk-create
+  endpoint over many single-credential calls for large batches. The API
+  authenticates each request with an API key in the Authorization header
+  (`Token token=YOUR_API_KEY`); an invalid key returns 401.
+notes: >-
+  No numeric per-account or per-endpoint request limits were found in the
+  Accredible API documentation as of the review date. A production and a sandbox
+  environment are provided (api.accredible.com and sandbox.api.accredible.com);
+  use the sandbox for load-sensitive testing. Verify any current limits with
+  Accredible support during reconciliation.
+sources:
+- https://docs.api.accredible.com/
+- https://help.accredible.com/s/article/api-faq
+- https://help.accredible.com/hc/en-us/articles/115003470989-What-are-the-API-endpoints-
+responseCodes:
+  throttled: 429
+  unauthorized: 401
+limits:
+- name: API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the Accredible API.
+- name: Recipient Allowance
+  scope: account
+  metric: recipients
+  limit: per plan (per year)
+  notes: >-
+    Issuance is governed by the plan's annual unique-recipient allowance rather
+    than a request-rate cap. Unlimited credentials per unique recipient.
+- name: Bulk Create Batch
+  scope: request
+  metric: credentials
+  limit: batch via /credentials/bulk_create
+  notes: Prefer bulk_create over many single POST /credentials calls for large issuances.
+policies:
+- name: Backoff Strategy
+  description: >-
+    Clients should implement exponential backoff with jitter and honor any
+    Retry-After header on 429 responses.
+- name: Bulk Preferred
+  description: >-
+    Use the bulk_create endpoint for large batches to reduce request volume and
+    avoid throttling.
+- name: Sandbox Testing
+  description: >-
+    Run high-volume or load-sensitive tests against the sandbox environment
+    (sandbox.api.accredible.com) rather than production.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

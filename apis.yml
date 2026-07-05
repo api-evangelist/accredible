@@ -1,0 +1,199 @@
+aid: accredible
+url: https://raw.githubusercontent.com/api-evangelist/accredible/refs/heads/main/apis.yml
+name: Accredible
+kind: company
+description: Accredible is a digital credentialing platform for issuing, managing,
+  and verifying digital certificates and Open Badges. The REST API lets issuers
+  create and update credentials (certificates and badges) for recipients, organize
+  them into Groups (courses/achievements), apply reusable visual Designs, attach
+  Evidence Items and References, generate PDFs and blockchain-verifiable records,
+  pull engagement analytics, manage Departments and Team Members, and generate
+  recipient SSO links. Credentials are issued against a Group and rendered with a
+  Design; the platform hosts a public verification page and share links for each
+  credential.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Digital Credentials
+- Certificates
+- Badges
+- Open Badges
+- Credentialing
+- Verification
+- Digital Badges
+created: '2026-07-05'
+modified: '2026-07-05'
+specificationVersion: '0.19'
+apis:
+- aid: accredible:accredible-credentials-api
+  name: Accredible Credentials API
+  tags:
+  - Credentials
+  - Certificates
+  - Badges
+  - Issuing
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: https://docs.api.accredible.com/
+    type: APIReference
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Create, retrieve, update, and delete digital credentials
+    (certificates and badges), bulk-create credentials, search credentials,
+    generate credential PDFs, resolve credential redirects, verify blockchain
+    records, and pull per-credential analytics. Each credential is issued to a
+    recipient against a Group.
+- aid: accredible:accredible-groups-api
+  name: Accredible Groups API
+  tags:
+  - Groups
+  - Courses
+  - Achievements
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Manage Groups - the course or achievement containers that
+    credentials are issued against. Create, retrieve, update, delete, list, and
+    search Groups under the issuer account. A Group holds the achievement
+    metadata and links to a Design.
+- aid: accredible:accredible-designs-api
+  name: Accredible Designs API
+  tags:
+  - Designs
+  - Badges
+  - Certificates
+  - Templates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Create, retrieve, update, delete, copy, search, and preview
+    reusable visual Designs that specify how a credential (badge or certificate)
+    is rendered, and initialize the embedded badge and certificate designer
+    experiences. A Design can be reused across multiple Groups.
+- aid: accredible:accredible-evidence-references-api
+  name: Accredible Evidence and References API
+  tags:
+  - Evidence
+  - References
+  - Supplemental
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Attach richer proof to a credential. Create, retrieve, update, and
+    delete Evidence Items (work samples and artifacts) and References (peer,
+    teacher, or manager endorsements) nested under an individual credential.
+- aid: accredible:accredible-analytics-api
+  name: Accredible Analytics API
+  tags:
+  - Analytics
+  - Engagement
+  - Reporting
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Retrieve issuer-level engagement analytics across credentials -
+    views, shares, and other interaction metrics - to measure the reach of
+    issued certificates and badges.
+- aid: accredible:accredible-departments-teams-api
+  name: Accredible Departments and Team Members API
+  tags:
+  - Departments
+  - Team Members
+  - Administration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Administer an issuer organization. Search Departments (independent
+    sub-organizations with their own Designs, Groups, and branding) and create,
+    retrieve, update, and delete Team Members and their roles.
+- aid: accredible:accredible-issuer-sso-api
+  name: Accredible Issuer and SSO API
+  tags:
+  - Issuer
+  - SSO
+  - Recipients
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  properties:
+  - url: https://docs.api.accredible.com/
+    type: Documentation
+  - url: openapi/accredible-openapi.yml
+    type: OpenAPI
+  - url: collections/accredible.postman_collection.json
+    type: PostmanCollection
+  - url: collections/accredible.opencollection.json
+    type: OpenCollection
+  description: Read issuer account details and generate recipient single sign-on
+    (SSO) links that let a recipient access their credentials, plus rotate the
+    account API token.
+common:
+- type: GitHubOrganization
+  url: https://github.com/accredible
+- type: LinkedIn
+  url: https://www.linkedin.com/company/accredible
+- type: Website
+  url: https://www.accredible.com
+- type: Documentation
+  url: https://docs.api.accredible.com/
+- type: Plans
+  url: plans/accredible-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/accredible-rate-limits.yml
+- type: FinOps
+  url: finops/accredible-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

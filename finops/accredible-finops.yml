@@ -1,0 +1,96 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Accredible
+providerId: accredible
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Digital Credentials
+- Certificates
+- Badges
+- Credentialing
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Accredible spend. Accredible is a subscription SaaS billed on a
+  per-unique-recipient basis over an annual commitment, not on API calls or
+  per-credential usage - an issuer pays once per unique recipient per year and
+  can issue unlimited certificates and badges to that recipient. The dominant
+  cost driver is therefore the count of distinct recipients credentialed in a
+  billing year, which maps to plan tier (Launch, Connect, Growth, Enterprise).
+  The API is included in the subscription with no separate metered API charge.
+notes: >-
+  Per-tier and per-recipient rates above the Launch entry price are quote-based
+  and not published; reconcile against an actual order form or invoice. Optimize
+  by de-duplicating recipients (one person credentialed once per year rather than
+  many overlapping records) and right-sizing the plan tier to expected annual
+  recipient volume.
+sources:
+- https://www.accredible.com/pricing
+- https://help.accredible.com/how-much-does-accredible-cost
+- https://docs.api.accredible.com/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Accredible
+serviceCategory: Digital Credentialing
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Annual
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: Accredible
+  ServiceCategory: Digital Credentialing
+  ProviderName: Accredible
+  PublisherName: Accredible
+  InvoiceIssuerName: Accredible
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: unique_recipients
+  description: Distinct recipients credentialed in the billing year - the primary cost driver.
+  unit: recipients
+  aggregation: sum
+  dimensions:
+  - account
+  - department
+  - group
+- name: credentials_issued
+  description: Certificates and badges issued. Unlimited per unique recipient; not directly billed.
+  unit: credentials
+  aggregation: sum
+  dimensions:
+  - account
+  - group
+  - design
+- name: plan_subscription
+  description: Annual plan fee for the selected tier (Launch, Connect, Growth, Enterprise).
+  unit: subscription
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+principles:
+- name: Visibility
+  description: Track unique recipients per department and group against the plan's annual allowance.
+- name: Allocation
+  description: Use Departments and Groups to map credentialing spend to programs, teams, or cost centers.
+- name: Optimization
+  description: De-duplicate recipients so each person is counted once per year; right-size the plan tier to expected recipient volume; reuse Designs across Groups.
+- name: Accountability
+  description: Assign an owner per department; review recipient counts before annual renewal to confirm the tier still fits.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
