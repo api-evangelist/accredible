@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://www.accredible.com/features
+url: https://www.accredible.com/features
+certifications:
+- SOC 2
+- GDPR
+evidence:
+- source: https://www.accredible.com/features
+  keywords:
+  - soc 2
+  - gdpr

@@ -180,6 +180,12 @@ apis:
     (SSO) links that let a recipient access their credentials, plus rotate the
     account API token.
 common:
+- type: TrustCenter
+  url: security/accredible-trust-center.yml
+- type: DomainSecurity
+  url: security/accredible-domain-security.yml
+- type: Authentication
+  url: authentication/accredible-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/accredible
 - type: LinkedIn
