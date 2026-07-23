@@ -1,0 +1,248 @@
+openapi: 3.0.3
+info:
+  title: Accredible Analytics Designs API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically. Credentials are issued to a recipient against a Group (a course or achievement) and rendered with a reusable Design. The API also manages Evidence Items and References attached to credentials, generates credential PDFs and blockchain-verifiable records, returns engagement analytics, administers Departments and Team Members, and generates recipient SSO links. All requests are authenticated with an API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`. Production base URL is https://api.accredible.com/v1; a sandbox is available at https://sandbox.api.accredible.com/v1. Endpoints and paths are grounded in Accredible's published API reference; request and response schemas are modeled and simplified.
+  version: '1.0'
+  contact:
+    name: Accredible
+    url: https://www.accredible.com
+  license:
+    name: Proprietary
+    url: https://www.accredible.com/terms-of-service
+servers:
+- url: https://api.accredible.com/v1
+  description: Production
+- url: https://sandbox.api.accredible.com/v1
+  description: Sandbox
+security:
+- tokenAuth: []
+tags:
+- name: Designs
+  description: Reusable visual specifications for rendering badges and certificates.
+paths:
+  /designs:
+    get:
+      operationId: listDesigns
+      deprecated: true
+      tags:
+      - Designs
+      summary: View all designs (deprecated)
+      description: Lists Designs, optionally filtered by kind and department.
+      parameters:
+      - name: kind
+        in: query
+        schema:
+          type: string
+          enum:
+          - certificate
+          - badge
+      - name: department_id
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A list of designs.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createDesign
+      tags:
+      - Designs
+      summary: Create a design
+      description: Creates a new visual Design for badges or certificates.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                design:
+                  $ref: '#/components/schemas/DesignInput'
+      responses:
+        '200':
+          description: The created design.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designs/{design_id}:
+    parameters:
+    - $ref: '#/components/parameters/DesignId'
+    get:
+      operationId: getDesign
+      tags:
+      - Designs
+      summary: View a design
+      description: Retrieves a single Design by ID.
+      responses:
+        '200':
+          description: The requested design.
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateDesign
+      tags:
+      - Designs
+      summary: Update a design
+      description: Updates an existing Design.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                design:
+                  $ref: '#/components/schemas/DesignInput'
+      responses:
+        '200':
+          description: The updated design.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: deleteDesign
+      tags:
+      - Designs
+      summary: Delete a design
+      description: Deletes a Design by ID.
+      responses:
+        '200':
+          description: The design was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designs/{design_id}/copy:
+    post:
+      operationId: copyDesign
+      tags:
+      - Designs
+      summary: Copy a design
+      description: Creates a duplicate of an existing Design.
+      parameters:
+      - $ref: '#/components/parameters/DesignId'
+      responses:
+        '200':
+          description: The copied design.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designs/search:
+    post:
+      operationId: searchDesigns
+      tags:
+      - Designs
+      summary: Search for designs
+      description: Searches Designs by name, kind, and other attributes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                kind:
+                  type: string
+                  enum:
+                  - certificate
+                  - badge
+                page:
+                  type: integer
+                page_size:
+                  type: integer
+      responses:
+        '200':
+          description: Matching designs.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designs/{design_id}/preview:
+    post:
+      operationId: previewDesign
+      tags:
+      - Designs
+      summary: Preview a design
+      description: Renders a preview image of a Design with sample data.
+      parameters:
+      - $ref: '#/components/parameters/DesignId'
+      responses:
+        '200':
+          description: A design preview.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designers/badge/initialize:
+    post:
+      operationId: initializeBadgeDesigner
+      tags:
+      - Designs
+      summary: Initialize embedded badge designer
+      description: Returns a session for the embedded badge designer experience.
+      responses:
+        '200':
+          description: An embedded badge designer session.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /designers/certificate/initialize:
+    post:
+      operationId: initializeCertificateDesigner
+      tags:
+      - Designs
+      summary: Initialize embedded certificate designer
+      description: Returns a session for the embedded certificate designer experience.
+      responses:
+        '200':
+          description: An embedded certificate designer session.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+    DesignInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the design.
+        kind:
+          type: string
+          enum:
+          - certificate
+          - badge
+          description: Whether the design renders a certificate or a badge.
+        department_id:
+          type: integer
+          description: The department the design belongs to.
+  parameters:
+    DesignId:
+      name: design_id
+      in: path
+      required: true
+      description: The unique ID of the design.
+      schema:
+        type: integer
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.

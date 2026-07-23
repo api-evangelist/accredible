@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: Accredible Analytics Evidence Items API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically. Credentials are issued to a recipient against a Group (a course or achievement) and rendered with a reusable Design. The API also manages Evidence Items and References attached to credentials, generates credential PDFs and blockchain-verifiable records, returns engagement analytics, administers Departments and Team Members, and generates recipient SSO links. All requests are authenticated with an API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`. Production base URL is https://api.accredible.com/v1; a sandbox is available at https://sandbox.api.accredible.com/v1. Endpoints and paths are grounded in Accredible's published API reference; request and response schemas are modeled and simplified.
+  version: '1.0'
+  contact:
+    name: Accredible
+    url: https://www.accredible.com
+  license:
+    name: Proprietary
+    url: https://www.accredible.com/terms-of-service
+servers:
+- url: https://api.accredible.com/v1
+  description: Production
+- url: https://sandbox.api.accredible.com/v1
+  description: Sandbox
+security:
+- tokenAuth: []
+tags:
+- name: Evidence Items
+  description: Supplemental work samples attached to a credential.
+paths:
+  /credentials/{credential_id}/evidence_items:
+    post:
+      operationId: createEvidenceItem
+      tags:
+      - Evidence Items
+      summary: Create an evidence item
+      description: Attaches a new Evidence Item (work sample or artifact) to a credential.
+      parameters:
+      - $ref: '#/components/parameters/CredentialIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evidence_item:
+                  $ref: '#/components/schemas/EvidenceItemInput'
+      responses:
+        '200':
+          description: The created evidence item.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /credentials/{credential_id}/evidence_items/{evidence_item_id}:
+    parameters:
+    - $ref: '#/components/parameters/CredentialIdPath'
+    - name: evidence_item_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      operationId: getEvidenceItem
+      tags:
+      - Evidence Items
+      summary: View an evidence item
+      description: Retrieves a single Evidence Item on a credential.
+      responses:
+        '200':
+          description: The requested evidence item.
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateEvidenceItem
+      tags:
+      - Evidence Items
+      summary: Update an evidence item
+      description: Updates an Evidence Item on a credential.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evidence_item:
+                  $ref: '#/components/schemas/EvidenceItemInput'
+      responses:
+        '200':
+          description: The updated evidence item.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: deleteEvidenceItem
+      tags:
+      - Evidence Items
+      summary: Delete an evidence item
+      description: Deletes an Evidence Item from a credential.
+      responses:
+        '200':
+          description: The evidence item was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    EvidenceItemInput:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description of the evidence.
+        category:
+          type: string
+          description: The category of the evidence item.
+        string_object:
+          type: string
+          description: A text value for the evidence.
+        file:
+          type: string
+          description: A file URL or upload reference for the evidence.
+        hidden:
+          type: boolean
+          description: Whether the evidence item is hidden.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    CredentialIdPath:
+      name: credential_id
+      in: path
+      required: true
+      description: The unique ID of the credential.
+      schema:
+        type: integer
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.

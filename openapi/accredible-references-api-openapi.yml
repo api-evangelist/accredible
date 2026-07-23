@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: Accredible Analytics References API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically. Credentials are issued to a recipient against a Group (a course or achievement) and rendered with a reusable Design. The API also manages Evidence Items and References attached to credentials, generates credential PDFs and blockchain-verifiable records, returns engagement analytics, administers Departments and Team Members, and generates recipient SSO links. All requests are authenticated with an API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`. Production base URL is https://api.accredible.com/v1; a sandbox is available at https://sandbox.api.accredible.com/v1. Endpoints and paths are grounded in Accredible's published API reference; request and response schemas are modeled and simplified.
+  version: '1.0'
+  contact:
+    name: Accredible
+    url: https://www.accredible.com
+  license:
+    name: Proprietary
+    url: https://www.accredible.com/terms-of-service
+servers:
+- url: https://api.accredible.com/v1
+  description: Production
+- url: https://sandbox.api.accredible.com/v1
+  description: Sandbox
+security:
+- tokenAuth: []
+tags:
+- name: References
+  description: Peer, teacher, or manager endorsements attached to a credential.
+paths:
+  /credentials/{credential_id}/references:
+    post:
+      operationId: createReference
+      tags:
+      - References
+      summary: Create a reference
+      description: Attaches a new Reference (endorsement) to a credential.
+      parameters:
+      - $ref: '#/components/parameters/CredentialIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reference:
+                  $ref: '#/components/schemas/ReferenceInput'
+      responses:
+        '200':
+          description: The created reference.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /credentials/{credential_id}/references/{reference_id}:
+    parameters:
+    - $ref: '#/components/parameters/CredentialIdPath'
+    - name: reference_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      operationId: getReference
+      tags:
+      - References
+      summary: View a reference
+      description: Retrieves a single Reference on a credential.
+      responses:
+        '200':
+          description: The requested reference.
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateReference
+      tags:
+      - References
+      summary: Update a reference
+      description: Updates a Reference on a credential.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reference:
+                  $ref: '#/components/schemas/ReferenceInput'
+      responses:
+        '200':
+          description: The updated reference.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: deleteReference
+      tags:
+      - References
+      summary: Delete a reference
+      description: Deletes a Reference from a credential.
+      responses:
+        '200':
+          description: The reference was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ReferenceInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the person giving the reference.
+        email:
+          type: string
+          description: The email of the referee.
+        body:
+          type: string
+          description: The reference text.
+        hidden:
+          type: boolean
+          description: Whether the reference is hidden.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+  parameters:
+    CredentialIdPath:
+      name: credential_id
+      in: path
+      required: true
+      description: The unique ID of the credential.
+      schema:
+        type: integer
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
