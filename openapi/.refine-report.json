@@ -1,0 +1,32 @@
+{
+  "provider": "accredible",
+  "sources": [
+    "accredible-analytics-api-openapi.yml",
+    "accredible-credentials-api-openapi.yml",
+    "accredible-departments-api-openapi.yml",
+    "accredible-designs-api-openapi.yml",
+    "accredible-evidence-items-api-openapi.yml",
+    "accredible-groups-api-openapi.yml",
+    "accredible-issuer-api-openapi.yml",
+    "accredible-references-api-openapi.yml",
+    "accredible-sso-api-openapi.yml",
+    "accredible-team-members-api-openapi.yml"
+  ],
+  "outputs": [
+    "accredible-analytics-api-openapi.yml",
+    "accredible-credentials-api-openapi.yml",
+    "accredible-departments-api-openapi.yml",
+    "accredible-designs-api-openapi.yml",
+    "accredible-evidence-items-api-openapi.yml",
+    "accredible-groups-api-openapi.yml",
+    "accredible-issuer-api-openapi.yml",
+    "accredible-references-api-openapi.yml",
+    "accredible-sso-api-openapi.yml",
+    "accredible-team-members-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
