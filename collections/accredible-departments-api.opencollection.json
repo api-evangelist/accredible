@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics Departments API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Departments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for departments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/departments/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Searches Departments - independent sub-organizations, each with their own Designs, Groups, and branding."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

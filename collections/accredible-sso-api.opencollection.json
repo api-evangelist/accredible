@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics SSO API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SSO",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate recipient SSO link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/sso/generate_link",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates a single sign-on link that lets a recipient access their credentials."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

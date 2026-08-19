@@ -1,0 +1,99 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics Team Members API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Team Members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/team_members",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a new Team Member (administrator) to the issuer account."
+        },
+        {
+          "info": {
+            "name": "View a team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single Team Member by ID."
+        },
+        {
+          "info": {
+            "name": "Update a team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a Team Member's details or role."
+        },
+        {
+          "info": {
+            "name": "Delete a team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/team_members/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Removes a Team Member from the issuer account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

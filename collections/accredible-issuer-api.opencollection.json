@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics Issuer API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Issuer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "View an issuer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/issuer/details"
+          },
+          "docs": "Returns details about the authenticated issuer account."
+        },
+        {
+          "info": {
+            "name": "Update API key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/api/generate_token"
+          },
+          "docs": "Rotates the API token for the issuer account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

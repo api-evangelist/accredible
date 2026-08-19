@@ -1,0 +1,200 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics Designs API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Designs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "View all designs (deprecated)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/designs",
+            "params": [
+              {
+                "name": "kind",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "department_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists Designs, optionally filtered by kind and department."
+        },
+        {
+          "info": {
+            "name": "Create a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new visual Design for badges or certificates."
+        },
+        {
+          "info": {
+            "name": "View a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the design."
+              }
+            ]
+          },
+          "docs": "Retrieves a single Design by ID."
+        },
+        {
+          "info": {
+            "name": "Update a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the design."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing Design."
+        },
+        {
+          "info": {
+            "name": "Delete a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/designs/:design_id",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the design."
+              }
+            ]
+          },
+          "docs": "Deletes a Design by ID."
+        },
+        {
+          "info": {
+            "name": "Copy a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/:design_id/copy",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the design."
+              }
+            ]
+          },
+          "docs": "Creates a duplicate of an existing Design."
+        },
+        {
+          "info": {
+            "name": "Search for designs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Searches Designs by name, kind, and other attributes."
+        },
+        {
+          "info": {
+            "name": "Preview a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designs/:design_id/preview",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the design."
+              }
+            ]
+          },
+          "docs": "Renders a preview image of a Design with sample data."
+        },
+        {
+          "info": {
+            "name": "Initialize embedded badge designer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designers/badge/initialize"
+          },
+          "docs": "Returns a session for the embedded badge designer experience."
+        },
+        {
+          "info": {
+            "name": "Initialize embedded certificate designer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/designers/certificate/initialize"
+          },
+          "docs": "Returns a session for the embedded certificate designer experience."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

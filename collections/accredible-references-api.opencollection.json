@@ -1,0 +1,125 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Accredible Analytics References API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "References",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a reference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references",
+            "params": [
+              {
+                "name": "credential_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the credential."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches a new Reference (endorsement) to a credential."
+        },
+        {
+          "info": {
+            "name": "View a reference",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              {
+                "name": "credential_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the credential."
+              },
+              {
+                "name": "reference_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single Reference on a credential."
+        },
+        {
+          "info": {
+            "name": "Update a reference",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              {
+                "name": "credential_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the credential."
+              },
+              {
+                "name": "reference_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a Reference on a credential."
+        },
+        {
+          "info": {
+            "name": "Delete a reference",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.accredible.com/v1/credentials/:credential_id/references/:reference_id",
+            "params": [
+              {
+                "name": "credential_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the credential."
+              },
+              {
+                "name": "reference_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes a Reference from a credential."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
