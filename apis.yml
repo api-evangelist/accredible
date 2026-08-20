@@ -133,6 +133,8 @@ apis:
   humanURL: https://docs.api.accredible.com/
   baseURL: https://api.accredible.com/v1
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
