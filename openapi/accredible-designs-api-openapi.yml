@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Accredible Analytics Designs API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically. Credentials are issued to a recipient against a Group (a course or achievement) and rendered with a reusable Design. The API also manages Evidence Items and References attached to credentials, generates credential PDFs and blockchain-verifiable records, returns engagement analytics, administers Departments and Team Members, and generates recipient SSO links. All requests are authenticated with an API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`. Production base URL is https://api.accredible.com/v1; a sandbox is available at https://sandbox.api.accredible.com/v1. Endpoints and paths are grounded in Accredible's published API reference; request and response schemas are modeled and simplified.
+  title: Accredible Designs API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
   version: '1.0'
   contact:
     name: Accredible
@@ -193,30 +193,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
     DesignInput:
       type: object
       properties:
@@ -232,6 +209,29 @@ components:
         department_id:
           type: integer
           description: The department the design belongs to.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     DesignId:
       name: design_id
