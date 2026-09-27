@@ -146,15 +146,30 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    GroupId:
-      name: group_id
-      in: path
-      required: true
-      description: The unique ID of the group.
-      schema:
-        type: integer
   schemas:
+    Group:
+      allOf:
+      - $ref: '#/components/schemas/GroupInput'
+      - type: object
+        properties:
+          id:
+            type: integer
+            description: The unique group ID.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+    GroupEnvelope:
+      type: object
+      properties:
+        group:
+          $ref: '#/components/schemas/Group'
     GroupInput:
       type: object
       properties:
@@ -173,29 +188,6 @@ components:
         language:
           type: string
           description: The language code for the group.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-    Group:
-      allOf:
-      - $ref: '#/components/schemas/GroupInput'
-      - type: object
-        properties:
-          id:
-            type: integer
-            description: The unique group ID.
-    GroupEnvelope:
-      type: object
-      properties:
-        group:
-          $ref: '#/components/schemas/Group'
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -209,6 +201,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    GroupId:
+      name: group_id
+      in: path
+      required: true
+      description: The unique ID of the group.
+      schema:
+        type: integer
   securitySchemes:
     tokenAuth:
       type: apiKey

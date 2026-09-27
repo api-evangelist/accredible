@@ -91,6 +91,29 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  schemas:
+    TeamMemberInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The team member's name.
+        email:
+          type: string
+          description: The team member's email address.
+        role:
+          type: string
+          description: The team member's role.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -104,29 +127,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-    TeamMemberInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The team member's name.
-        email:
-          type: string
-          description: The team member's email address.
-        role:
-          type: string
-          description: The team member's role.
   securitySchemes:
     tokenAuth:
       type: apiKey

@@ -95,6 +95,16 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
     ReferenceInput:
       type: object
       properties:
@@ -110,24 +120,6 @@ components:
         hidden:
           type: boolean
           description: Whether the reference is hidden.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-  parameters:
-    CredentialIdPath:
-      name: credential_id
-      in: path
-      required: true
-      description: The unique ID of the credential.
-      schema:
-        type: integer
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -141,6 +133,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    CredentialIdPath:
+      name: credential_id
+      in: path
+      required: true
+      description: The unique ID of the credential.
+      schema:
+        type: integer
   securitySchemes:
     tokenAuth:
       type: apiKey
