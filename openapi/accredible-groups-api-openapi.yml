@@ -147,6 +147,11 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    GroupEnvelope:
+      type: object
+      properties:
+        group:
+          $ref: '#/components/schemas/Group'
     Group:
       allOf:
       - $ref: '#/components/schemas/GroupInput'
@@ -165,11 +170,6 @@ components:
           type: array
           items:
             type: string
-    GroupEnvelope:
-      type: object
-      properties:
-        group:
-          $ref: '#/components/schemas/Group'
     GroupInput:
       type: object
       properties:
@@ -189,14 +189,14 @@ components:
           type: string
           description: The language code for the group.
   responses:
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Invalid or missing API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Invalid or missing API key.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
