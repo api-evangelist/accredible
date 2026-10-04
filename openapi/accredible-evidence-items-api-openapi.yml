@@ -95,18 +95,26 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    CredentialIdPath:
+      name: credential_id
+      in: path
+      required: true
+      description: The unique ID of the credential.
+      schema:
+        type: integer
   schemas:
     EvidenceItemInput:
       type: object
@@ -136,14 +144,6 @@ components:
           type: array
           items:
             type: string
-  parameters:
-    CredentialIdPath:
-      name: credential_id
-      in: path
-      required: true
-      description: The unique ID of the credential.
-      schema:
-        type: integer
   securitySchemes:
     tokenAuth:
       type: apiKey

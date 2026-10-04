@@ -146,30 +146,20 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    GroupEnvelope:
-      type: object
-      properties:
-        group:
-          $ref: '#/components/schemas/Group'
-    Group:
-      allOf:
-      - $ref: '#/components/schemas/GroupInput'
-      - type: object
-        properties:
-          id:
-            type: integer
-            description: The unique group ID.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
     GroupInput:
       type: object
       properties:
@@ -188,19 +178,29 @@ components:
         language:
           type: string
           description: The language code for the group.
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+    GroupEnvelope:
+      type: object
+      properties:
+        group:
+          $ref: '#/components/schemas/Group'
+    Group:
+      allOf:
+      - $ref: '#/components/schemas/GroupInput'
+      - type: object
+        properties:
+          id:
+            type: integer
+            description: The unique group ID.
   parameters:
     GroupId:
       name: group_id
