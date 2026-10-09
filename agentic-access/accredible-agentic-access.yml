@@ -1,19 +1,49 @@
-generated: '2026-07-15'
+generated: '2026-09-23'
 method: generated
-source: openapi/accredible-openapi.yml
+source: openapi/accredible-analytics-api-openapi.yml, openapi/accredible-credentials-api-openapi.yml,
+  openapi/accredible-departments-api-openapi.yml, openapi/accredible-designs-api-openapi.yml,
+  openapi/accredible-evidence-items-api-openapi.yml, openapi/accredible-groups-api-openapi.yml,
+  openapi/accredible-issuer-api-openapi.yml, openapi/accredible-references-api-openapi.yml,
+  openapi/accredible-sso-api-openapi.yml, openapi/accredible-team-members-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 45
   by_action_class:
-    acting: 32
-    connected: 13
+    acting: 29
+    connected: 16
   by_consequence:
-    write: 32
-    read: 13
+    write: 29
+    read: 16
   human_in_the_loop_required: 0
 operations:
+- path: /credentials/analytics/{id}
+  method: post
+  operationId: getCredentialAnalytics
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /analytics
+  method: get
+  operationId: indexAnalytics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /credentials
   method: post
   operationId: createCredential
@@ -156,22 +186,6 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /credentials/analytics/{id}
-  method: post
-  operationId: getCredentialAnalytics
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /issuer/credential_redirect
   method: get
   operationId: credentialRedirect
@@ -182,25 +196,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /issuer/groups
+- path: /departments/search
   method: post
-  operationId: createGroup
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /issuer/groups/{group_id}
-  method: get
-  operationId: getGroup
+  operationId: searchDepartments
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -208,64 +206,6 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /issuer/groups/{group_id}
-  method: put
-  operationId: updateGroup
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /issuer/groups/{group_id}
-  method: delete
-  operationId: deleteGroup
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /issuer/all_groups
-  method: get
-  operationId: listAllGroups
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /issuer/groups/search
-  method: post
-  operationId: searchGroups
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /designs
   method: get
   operationId: listDesigns
@@ -354,18 +294,12 @@ operations:
   method: post
   operationId: searchDesigns
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /designs/{design_id}/preview
   method: post
   operationId: previewDesign
@@ -401,22 +335,6 @@ operations:
 - path: /designers/certificate/initialize
   method: post
   operationId: initializeCertificateDesigner
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /departments/search
-  method: post
-  operationId: searchDepartments
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -488,6 +406,110 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /issuer/groups
+  method: post
+  operationId: createGroup
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /issuer/groups/{group_id}
+  method: get
+  operationId: getGroup
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /issuer/groups/{group_id}
+  method: put
+  operationId: updateGroup
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /issuer/groups/{group_id}
+  method: delete
+  operationId: deleteGroup
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /issuer/all_groups
+  method: get
+  operationId: listAllGroups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /issuer/groups/search
+  method: post
+  operationId: searchGroups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /issuer/details
+  method: get
+  operationId: getIssuerDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/generate_token
+  method: post
+  operationId: generateApiToken
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /credentials/{credential_id}/references
   method: post
   operationId: createReference
@@ -546,16 +568,22 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /analytics
-  method: get
-  operationId: indexAnalytics
+- path: /sso/generate_link
+  method: post
+  operationId: generateSsoLink
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /team_members
   method: post
   operationId: createTeamMember
@@ -601,48 +629,6 @@ operations:
 - path: /team_members/{id}
   method: delete
   operationId: deleteTeamMember
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /issuer/details
-  method: get
-  operationId: getIssuerDetails
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /sso/generate_link
-  method: post
-  operationId: generateSsoLink
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/generate_token
-  method: post
-  operationId: generateApiToken
   x-agentic-access:
     action-class: acting
     consequence: write
