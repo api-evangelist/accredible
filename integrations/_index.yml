@@ -61,3 +61,16 @@
     detected: '2026-10-14'
   status: not-a-workflow
   arazzo: null
+- slug: accredible-canvas-eduappcenter
+  label: Canvas (eduappcenter)
+  partner: canvas
+  partner_name: Canvas (eduappcenter)
+  category: Course Nav, User Nav, Account Nav, Web 2.0
+  type: marketplace
+  marketplace: eduappcenter
+  channel: partner-built
+  evidence: https://www.eduappcenter.com/api/v1/lti_apps
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
