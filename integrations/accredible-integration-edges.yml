@@ -1,0 +1,60 @@
+edges:
+- partner_name: 1EdTech
+  partner: null
+  type: contract
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://site.imsglobal.org/certifications
+  category: 1EdTech certified products
+  contract_reference:
+    register: 1EdTech certified product directory (TrustEd Apps)
+    spec_file: null
+    standard: 1EdTech
+    role: Contributing Member
+    registered_name: Accredible
+    matched_domain: accredible.com
+    matched_by: domain
+    standards:
+    - Open Badges v2.0
+    - Open Badges v3.0
+    certified_products:
+    - product: Accredible
+      version: v25.25.28
+      standards:
+      - Open Badges v3.0
+      implementation:
+      - 'Type: Issuer'
+      attributes:
+      - Certified Product
+      - Vetted
+      lapsed: false
+      url: https://site.imsglobal.org/certifications/accredible/accredible/v252528
+    - product: Accredible
+      version: v26.1.24
+      standards:
+      - Open Badges v3.0
+      implementation:
+      - 'API Support: Service Consumer (Write)'
+      attributes:
+      - Certified Product
+      - Vetted
+      lapsed: false
+      url: https://site.imsglobal.org/certifications/accredible/accredible/v26124
+    - product: Accredible
+      version: v26.19.37
+      standards:
+      - Open Badges v2.0
+      implementation:
+      - 'Type: Issuer'
+      attributes:
+      - Certified Product
+      - Vetted
+      lapsed: false
+      url: https://site.imsglobal.org/node/845329
+    detected_by: sweep-edtech.py
+    detected: '2026-10-14'
+generated: '2026-10-14'
+method: searched
+checked:
+- https://site.imsglobal.org/certifications
