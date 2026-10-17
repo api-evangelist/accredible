@@ -58,6 +58,13 @@ components:
           type: array
           items:
             type: string
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     CredentialId:
       name: id
@@ -66,13 +73,6 @@ components:
       description: The unique ID of the credential.
       schema:
         type: integer
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     tokenAuth:
       type: apiKey
