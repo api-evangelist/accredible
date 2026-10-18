@@ -99,3 +99,16 @@
     builder: unknown (not in the directory record)
   status: not-a-workflow
   arazzo: null
+- slug: accredible-zoom-own
+  label: Zoom (own)
+  partner: zoom
+  partner_name: Zoom (own)
+  category: Zoom app
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.zoom.us/apps/mK1Yy_zeQAKUEqGlohEl5g
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

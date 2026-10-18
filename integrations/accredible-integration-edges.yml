@@ -97,11 +97,29 @@ edges:
     builder: unknown (not in the directory record)
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
+- partner_name: Zoom (own)
+  partner: zoom
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.zoom.us/apps/mK1Yy_zeQAKUEqGlohEl5g
+  mirror_of: zoom/integrations/zoom-integration-edges.yml
+  apps:
+  - Accredible Certificates & Badges - USA
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Zoom app
 generated: '2026-10-14'
 method: searched
 checked:
 - canvas/integrations/canvas-integration-edges.yml
 - https://site.imsglobal.org/certifications
 - https://zapier.com/api/v4/apps/
+- zoom/integrations/zoom-integration-edges.yml
 source:
 - canvas/integrations/canvas-integration-edges.yml
