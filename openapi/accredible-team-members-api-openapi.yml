@@ -1,135 +1,1061 @@
 openapi: 3.2.0
 info:
-  title: Accredible Team Members API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
-  version: '1.0'
-  contact:
-    name: Accredible
-    url: https://www.accredible.com
-  license:
-    name: Proprietary
-    url: https://www.accredible.com/terms-of-service
+  title: Accredible Credential Team Members API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
 servers:
-- url: https://api.accredible.com/v1
-  description: Production
-- url: https://sandbox.api.accredible.com/v1
-  description: Sandbox
-security:
-- tokenAuth: []
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
 tags:
 - name: Team Members
-  description: Administrators and roles within the issuer account.
+  description: Accredible Dashboard users who create, edit or manage Credentials as part of your Organization.
 paths:
-  /team_members:
+  /v1/team_members:
     post:
-      operationId: createTeamMember
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_member:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      department_permissions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            department:
+                              type: number
+                            permissions:
+                              type: object
+                              properties:
+                                designs:
+                                  type: boolean
+                                emails:
+                                  type: boolean
+                                credential_attributes:
+                                  type: boolean
+                                analytics:
+                                  type: boolean
+                                settings:
+                                  type: boolean
+                                role:
+                                  type: string
+                                pathways:
+                                  type: boolean
+                                groups:
+                                  type: array
+                                  items:
+                                    type: number
+                                api:
+                                  type: boolean
+                                team:
+                                  type: boolean
+                                spotlight_directory:
+                                  type: boolean
+                                access_level:
+                                  type: string
+                                  enum:
+                                  - organization_admin
+                                  - department_admin
+                                  - team_member
+                                  - developer
+                                analytics_email:
+                                  type: boolean
+                                manage_dept_admins_and_devs:
+                                  type: boolean
+                              required:
+                              - designs
+                              - emails
+                              - credential_attributes
+                              - analytics
+                              - settings
+                              - role
+                          required:
+                          - department
+                          - permissions
+              example:
+                team_member:
+                  id: 12345
+                  name: John Doe
+                  email: person@example.com
+                  department_permissions:
+                  - department: 34
+                    permissions:
+                      designs: true
+                      emails: true
+                      credential_attributes: true
+                      analytics: true
+                      settings: true
+                      role: editor
+                      pathways: true
+                      groups:
+                      - 1
+                      - 2
+                      - 3
+                      api: false
+                      team: true
+                      spotlight_directory: false
+                      access_level: department_admin
+                      analytics_email: true
+                      manage_dept_admins_and_devs: true
+                  - department: 35
+                    permissions:
+                      designs: false
+                      emails: false
+                      credential_attributes: false
+                      analytics: false
+                      settings: false
+                      role: viewer
+                      pathways: false
+                      groups: null
+                      api: false
+                      team: false
+                      spotlight_directory: false
+                      access_level: team_member
+                      analytics_email: false
+                      manage_dept_admins_and_devs: false
+      summary: Create a Team Member
+      operationId: CreateATeamMember
+      description: 'Create a TeamMember using this action. It requires a JSON object containing a TeamMember.
+
+
+        **Important**
+
+
+        - Organization Admin cannot be created through the API.
+
+        - To create a Department Admin or Developer your account must be on the Connect/Growth Plan.
+
+
+        The `access_level` of each `department_permissions` entry determines what is created, and authorization is based on the type of API key you use:
+
+
+        | Access Level | Account-wide key | Department-specific key |
+
+        | --- | --- | --- |
+
+        | Team Member (default) | Any Department in the account | Its own Department only |
+
+        | Department Admin | Any Department in the account | Not permitted |
+
+        | Developer | Any Department in the account | Not permitted |
+
+        | Organization Admin | Not permitted | Not permitted |
+
+
+        **Permitted values by `access_level`.**
+
+
+        FieldTeam MemberDepartment Admin*Developer*
+
+
+        access_levelteam_memberdepartment_admindeveloper
+
+
+        roleeditor
+
+        credential_issuer
+
+        viewereditorviewer
+
+
+        apiNAfalsetruetrue
+
+
+        designstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        emailstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        credential_attributestrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        analyticstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        settingstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        pathwaystrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        teamNAtrue
+
+        falsetrueNA
+
+
+        analytics_emailNAtrue
+
+        falsetrueNA
+
+
+        manage_dept_admins_and_devsNAtrue
+
+        falsetrueNA
+
+
+        groupsArray of Group IDs to limit access toNA (All groups allowed)NA (All groups allowed)
+
+
+        *NA - Not Applicable, can be omitted.*
+
+        * *Only available on Connect/Growth Plan.*'
       tags:
       - Team Members
-      summary: Create a team member
-      description: Adds a new Team Member (administrator) to the issuer account.
       requestBody:
-        required: true
         content:
           application/json:
+            example:
+              team_member:
+                name: John Doe
+                email: person@example.com
+                department_permissions:
+                - department_id: 34
+                  permissions:
+                    designs: true
+                    emails: true
+                    credential_attributes: true
+                    analytics: true
+                    settings: true
+                    role: editor
+                    pathways: true
+                    groups:
+                    - 1
+                    - 2
+                    - 3
+                    api: false
+                    team: true
+                    access_level: department_admin
+                    analytics_email: true
+                    manage_dept_admins_and_devs: true
+                - department_id: 35
+                  permissions:
+                    designs: false
+                    emails: false
+                    credential_attributes: false
+                    analytics: false
+                    settings: false
+                    role: viewer
+                    pathways: false
+                    groups: null
+                    api: false
+                    team: false
+                    access_level: team_member
+                    analytics_email: false
+                    manage_dept_admins_and_devs: false
             schema:
               type: object
               properties:
-                team_member:
-                  $ref: '#/components/schemas/TeamMemberInput'
-      responses:
-        '200':
-          description: The created team member.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /team_members/{id}:
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
+                name:
+                  type: string
+                  description: The name of the TeamMember user.
+                email:
+                  type: string
+                  description: The email address of the TeamMember user.
+                department_permissions:
+                  type: array
+                  description: Array of department permissions for the team member.
+                  items:
+                    type: object
+                    properties:
+                      department_id:
+                        type: number
+                        description: Department that the TeamMember should have the given permissions for.
+                      permissions:
+                        type: object
+                        properties:
+                          designs:
+                            type: boolean
+                            description: Should the TeamMember have access to Designs for the given Department?
+                          emails:
+                            type: boolean
+                            description: Should the TeamMember have access to Email Settings and Email Templates for the given Department?
+                          credential_attributes:
+                            type: boolean
+                            description: Should the TeamMember have access to Attributes for the given Department?
+                          analytics:
+                            type: boolean
+                            description: Should the TeamMember have access to Analytics for the given Department?
+                          settings:
+                            type: boolean
+                            description: Should the TeamMember have access to Settings for the given Department?
+                          role:
+                            type: string
+                            description: '"editor", "credential_issuer" or "viewer" access to Credential data in the Department.'
+                          pathways:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember have access to Pathways for the given Department?
+                          api:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember have access to API keys for the given Department?
+                          team:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember be able to manage other Team Members in the given Department?
+                          access_level:
+                            type: string
+                            enum:
+                            - team_member
+                            - department_admin
+                            - developer
+                            default: team_member
+                            description: The TeamMember's access level in the given Department.
+                          analytics_email:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember receive scheduled Analytics emails for the given Department?
+                          manage_dept_admins_and_devs:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember be able to manage Department Admins and Developers in the given Department?
+                          groups:
+                            type: array
+                            description: Limit the TeamMember access to specific Groups in the Department.
+                            items:
+                              type: number
+                        required:
+                        - designs
+                        - emails
+                        - credential_attributes
+                        - analytics
+                        - settings
+                        - role
+                    required:
+                    - department_id
+                    - permissions
+              required:
+              - name
+              - email
+              - department_permissions
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/team_members\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"team_member\": {\n    \"name\": \"John Doe\",\n    \"email\": \"person@example.com\",\n    \"department_permissions\": [\n      {\n        \"department_id\": 34,\n        \"permissions\": {\n          \"designs\": true,\n          \"emails\": true,\n          \"credential_attributes\": true,\n          \"analytics\": true,\n          \"settings\": true,\n          \"role\": \"editor\",\n          \"pathways\": true,\n          \"groups\": [1, 2, 3],\n          \"api\": false,\n          \"team\": true,\n          \"access_level\": \"department_admin\",\n          \"analytics_email\": true,\n          \"manage_dept_admins_and_devs\": true\n        }\n      },\n      {\n        \"department_id\": 35,\n        \"permissions\": {\n          \"designs\": false,\n          \"emails\": false,\n          \"credential_attributes\": false,\n          \"analytics\": false,\n          \"settings\": false,\n          \"role\": \"viewer\",\n          \"pathways\": false,\n          \"groups\": null,\n          \"api\": false,\n          \"team\": false,\n          \"access_level\": \"team_member\",\n          \"analytics_email\": false,\n          \"manage_dept_admins_and_devs\": false\n        }\n      }\n    ]\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Create a Team Member
+  /v1/team_members/{id}:
     get:
-      operationId: getTeamMember
-      tags:
-      - Team Members
-      summary: View a team member
-      description: Retrieves a single Team Member by ID.
       responses:
         '200':
-          description: The requested team member.
-        '404':
-          $ref: '#/components/responses/NotFound'
-    put:
-      operationId: updateTeamMember
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_member:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      department_permissions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            department:
+                              type: number
+                            permissions:
+                              type: object
+                              properties:
+                                designs:
+                                  type: boolean
+                                emails:
+                                  type: boolean
+                                credential_attributes:
+                                  type: boolean
+                                analytics:
+                                  type: boolean
+                                settings:
+                                  type: boolean
+                                role:
+                                  type: string
+                                pathways:
+                                  type: boolean
+                                groups:
+                                  type:
+                                  - array
+                                  - 'null'
+                                  items:
+                                    type: number
+                                api:
+                                  type: boolean
+                                team:
+                                  type: boolean
+                                spotlight_directory:
+                                  type: boolean
+                                access_level:
+                                  type: string
+                                  enum:
+                                  - organization_admin
+                                  - department_admin
+                                  - team_member
+                                  - developer
+                                analytics_email:
+                                  type: boolean
+                                manage_dept_admins_and_devs:
+                                  type: boolean
+                          required:
+                          - department
+                          - permissions
+              example:
+                team_member:
+                  id: 12345
+                  name: John Doe
+                  email: person@example.com
+                  department_permissions:
+                  - department: 34
+                    permissions:
+                      designs: true
+                      emails: true
+                      credential_attributes: true
+                      analytics: true
+                      settings: true
+                      role: editor
+                      pathways: true
+                      groups:
+                      - 1
+                      - 2
+                      - 3
+                      api: false
+                      team: true
+                      spotlight_directory: false
+                      access_level: department_admin
+                      analytics_email: true
+                      manage_dept_admins_and_devs: true
+                  - department: 35
+                    permissions:
+                      designs: false
+                      emails: false
+                      credential_attributes: false
+                      analytics: false
+                      settings: false
+                      role: viewer
+                      pathways: false
+                      groups: null
+                      api: false
+                      team: false
+                      spotlight_directory: false
+                      access_level: team_member
+                      analytics_email: false
+                      manage_dept_admins_and_devs: false
+      summary: View a Team Member
+      operationId: ViewATeamMember
+      description: 'View a TeamMember and their permissions in each Department.
+
+
+        Which TeamMembers you can view depends on the type of API key you use:
+
+
+        | Access Level | Account-wide key | Department-specific key |
+
+        | --- | --- | --- |
+
+        | Team Member | Any Department in the account | Its own Department only |
+
+        | Department Admin | Any Department in the account | Its own Department only |
+
+        | Developer | Any Department in the account | Its own Department only |
+
+        | Organization Admin | Visible | Not visible |'
       tags:
       - Team Members
-      summary: Update a team member
-      description: Updates a Team Member's details or role.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/team_members/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View a Team Member
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_member:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      department_permissions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            department:
+                              type: number
+                            permissions:
+                              type: object
+                              properties:
+                                designs:
+                                  type: boolean
+                                emails:
+                                  type: boolean
+                                credential_attributes:
+                                  type: boolean
+                                analytics:
+                                  type: boolean
+                                settings:
+                                  type: boolean
+                                role:
+                                  type: string
+                                pathways:
+                                  type: boolean
+                                groups:
+                                  type:
+                                  - array
+                                  - 'null'
+                                  items:
+                                    type: number
+                                api:
+                                  type: boolean
+                                team:
+                                  type: boolean
+                                spotlight_directory:
+                                  type: boolean
+                                access_level:
+                                  type: string
+                                  enum:
+                                  - organization_admin
+                                  - department_admin
+                                  - team_member
+                                  - developer
+                                analytics_email:
+                                  type: boolean
+                                manage_dept_admins_and_devs:
+                                  type: boolean
+                          required:
+                          - department
+                          - permissions
+              example:
+                team_member:
+                  id: 12345
+                  name: John Doe
+                  email: person@example.com
+                  department_permissions:
+                  - department: 34
+                    permissions:
+                      designs: false
+                      emails: false
+                      credential_attributes: true
+                      analytics: true
+                      settings: true
+                      role: editor
+                      pathways: true
+                      groups:
+                      - 1
+                      - 2
+                      - 3
+                      api: false
+                      team: true
+                      spotlight_directory: false
+                      access_level: department_admin
+                      analytics_email: true
+                      manage_dept_admins_and_devs: true
+                  - department: 35
+                    permissions:
+                      designs: false
+                      emails: false
+                      credential_attributes: false
+                      analytics: false
+                      settings: false
+                      role: viewer
+                      pathways: false
+                      groups: null
+                      api: false
+                      team: false
+                      spotlight_directory: false
+                      access_level: team_member
+                      analytics_email: false
+                      manage_dept_admins_and_devs: false
+      summary: Update a Team Member
+      operationId: UpdateATeamMember
+      description: 'Update a TeamMember using this action. It requires a JSON object containing a TeamMember.
+
+
+        **Important**
+
+
+        - Organization Admin cannot be created or updated through the API.
+
+        - To assign a Department Admin or Developer your account must be on the Connect/Growth Plan.
+
+
+        **The `department_permissions` array replaces the TeamMember''s entire permission set.** A Department present in the array is created or updated; a Department omitted from the array has its permission removed, if your API key is authorized to remove it.
+
+
+        Which TeamMembers you can update depends on the type of API key you use:
+
+
+        | Access Level | Account-wide key | Department-specific key |
+
+        | --- | --- | --- |
+
+        | Team Member | Any Department in the account | Its own Department only |
+
+        | Department Admin | Any Department in the account | Not permitted |
+
+        | Developer | Any Department in the account | Not permitted |
+
+        | Organization Admin | Not permitted | Not permitted |
+
+
+        **Permitted values by `access_level`.**
+
+
+        FieldTeam MemberDepartment Admin*Developer*
+
+
+        access_levelteam_memberdepartment_admindeveloper
+
+
+        roleeditor
+
+        credential_issuer
+
+        viewereditorviewer
+
+
+        apiNAfalsetruetrue
+
+
+        designstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        emailstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        credential_attributestrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        analyticstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        settingstrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        pathwaystrue
+
+        falsetrue
+
+        falsetrueNA
+
+
+        teamNAtrue
+
+        falsetrueNA
+
+
+        analytics_emailNAtrue
+
+        falsetrueNA
+
+
+        manage_dept_admins_and_devsNAtrue
+
+        falsetrueNA
+
+
+        groupsArray of Group IDs to limit access toNA (All groups allowed)NA (All groups allowed)
+
+
+        *NA - Not Applicable, can be omitted.*
+
+        * *Only available on Connect/Growth Plan.*'
+      tags:
+      - Team Members
       requestBody:
-        required: true
         content:
           application/json:
+            example:
+              team_member:
+                department_permissions:
+                - department_id: 34
+                  permissions:
+                    designs: false
+                    emails: false
+                    credential_attributes: true
+                    analytics: true
+                    settings: true
+                    role: editor
+                    pathways: true
+                    groups:
+                    - 1
+                    - 2
+                    - 3
+                    api: false
+                    team: true
+                    access_level: department_admin
+                    analytics_email: true
+                    manage_dept_admins_and_devs: true
+                - department_id: 35
+                  permissions:
+                    designs: false
+                    emails: false
+                    credential_attributes: false
+                    analytics: false
+                    settings: false
+                    role: viewer
+                    pathways: false
+                    groups: null
+                    api: false
+                    team: false
+                    access_level: team_member
+                    analytics_email: false
+                    manage_dept_admins_and_devs: false
             schema:
               type: object
               properties:
-                team_member:
-                  $ref: '#/components/schemas/TeamMemberInput'
+                id:
+                  type: number
+                  description: The ID of the TeamMember to update.
+                name:
+                  type: string
+                  description: The name of the TeamMember user. A blank value leaves the existing name unchanged.
+                department_permissions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      department_id:
+                        type: number
+                        description: Department that the TeamMember should have the given permissions for.
+                      permissions:
+                        type: object
+                        properties:
+                          designs:
+                            type: boolean
+                            description: Should the TeamMember have access to Designs for the given Department?
+                          emails:
+                            type: boolean
+                            description: Should the TeamMember have access to Email Settings and Email Templates for the given Department?
+                          credential_attributes:
+                            type: boolean
+                            description: Should the TeamMember have access to Attributes for the given Department?
+                          analytics:
+                            type: boolean
+                            description: Should the TeamMember have access to Analytics for the given Department?
+                          settings:
+                            type: boolean
+                            description: Should the TeamMember have access to Settings for the given Department?
+                          role:
+                            type: string
+                            description: '"editor", "credential_issuer" or "viewer" access to Credential data in the Department.'
+                          pathways:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember have access to Pathways for the given Department?
+                          api:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember have access to API keys for the given Department?
+                          team:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember be able to manage other Team Members in the given Department?
+                          access_level:
+                            type: string
+                            enum:
+                            - team_member
+                            - department_admin
+                            - developer
+                            default: team_member
+                            description: The TeamMember's access level in the given Department.
+                          analytics_email:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember receive scheduled Analytics emails for the given Department?
+                          manage_dept_admins_and_devs:
+                            type: boolean
+                            default: false
+                            description: Should the TeamMember be able to manage Department Admins and Developers in the given Department?
+                          groups:
+                            description: Limit the TeamMember access to specific Groups in the Department.
+                        required:
+                        - designs
+                        - emails
+                        - credential_attributes
+                        - analytics
+                        - settings
+                        - role
+                    required:
+                    - department_id
+                    - permissions
+                  description: This parameter replaces the TeamMember's entire set of permissions, it does not append to them.
+              required:
+              - id
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X PUT \\\n  \"https://api.accredible.com/v1/team_members/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"team_member\": {\n    \"department_permissions\": [\n      {\n        \"department_id\": 34,\n        \"permissions\": {\n          \"designs\": false,\n          \"emails\": false,\n          \"credential_attributes\": true,\n          \"analytics\": true,\n          \"settings\": true,\n          \"role\": \"editor\",\n          \"pathways\": true,\n          \"groups\": [\n            1,\n            2,\n            3\n          ],\n          \"api\": false,\n          \"team\": true,\n          \"access_level\": \"department_admin\",\n          \"analytics_email\": true,\n          \"manage_dept_admins_and_devs\": true\n        }\n      },\n      {\n        \"department_id\": 35,\n        \"permissions\": {\n          \"designs\": false,\n          \"emails\": false,\n          \"credential_attributes\": false,\n          \"analytics\": false,\n          \"settings\": false,\n          \"role\": \"viewer\",\n          \"pathways\": false,\n          \"groups\": null,\n          \"api\": false,\n          \"team\": false,\n          \"access_level\": \"team_member\",\n          \"analytics_email\": false,\n          \"manage_dept_admins_and_devs\": false\n        }\n      }\n    ]\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Update a Team Member
+    delete:
       responses:
         '200':
-          description: The updated team member.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-    delete:
-      operationId: deleteTeamMember
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_member:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      department_permissions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            department:
+                              type: number
+                            permissions:
+                              type: object
+                              properties:
+                                designs:
+                                  type: boolean
+                                emails:
+                                  type: boolean
+                                credential_attributes:
+                                  type: boolean
+                                analytics:
+                                  type: boolean
+                                settings:
+                                  type: boolean
+                                role:
+                                  type: string
+                                pathways:
+                                  type: boolean
+                                groups:
+                                  type:
+                                  - array
+                                  - 'null'
+                                  items:
+                                    type: number
+                                api:
+                                  type: boolean
+                                team:
+                                  type: boolean
+                                spotlight_directory:
+                                  type: boolean
+                                access_level:
+                                  type: string
+                                  enum:
+                                  - organization_admin
+                                  - department_admin
+                                  - team_member
+                                  - developer
+                                analytics_email:
+                                  type: boolean
+                                manage_dept_admins_and_devs:
+                                  type: boolean
+                          required:
+                          - department
+                          - permissions
+              example:
+                team_member:
+                  id: 12345
+                  name: John Doe
+                  email: person@example.com
+                  department_permissions:
+                  - department: 34
+                    permissions:
+                      designs: true
+                      emails: true
+                      credential_attributes: true
+                      analytics: true
+                      settings: true
+                      role: editor
+                      pathways: true
+                      groups:
+                      - 1
+                      - 2
+                      - 3
+                      api: false
+                      team: true
+                      spotlight_directory: false
+                      access_level: department_admin
+                      analytics_email: true
+                      manage_dept_admins_and_devs: true
+                  - department: 35
+                    permissions:
+                      designs: false
+                      emails: false
+                      credential_attributes: false
+                      analytics: false
+                      settings: false
+                      role: viewer
+                      pathways: false
+                      groups: null
+                      api: false
+                      team: false
+                      spotlight_directory: false
+                      access_level: team_member
+                      analytics_email: false
+                      manage_dept_admins_and_devs: false
+      summary: Delete a Team Member
+      operationId: DeleteATeamMember
+      description: 'Remove a TeamMember from the Departments your API key can reach.
+
+
+        What the request removes depends on the type of API key you use:
+
+
+        | Access Level | Account-wide key | Department-specific key |
+
+        | --- | --- | --- |
+
+        | Team Member | Any Department in the account | Its own Department only |
+
+        | Department Admin | Any Department in the account | Not removed |
+
+        | Developer | Any Department in the account | Not removed |
+
+        | Organization Admin | Not removed | Not removed |'
       tags:
       - Team Members
-      summary: Delete a team member
-      description: Removes a Team Member from the issuer account.
-      responses:
-        '200':
-          description: The team member was deleted.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+      parameters:
+      - name: id
+        in: path
+        description: ID of the TeamMember in the form of an integer.
+        required: true
+        schema:
+          type: string
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X DELETE \\\n  \"https://api.accredible.com/v1/team_members/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete a Team Member
 components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-    TeamMemberInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The team member's name.
-        email:
-          type: string
-          description: The team member's email address.
-        role:
-          type: string
-          description: The team member's role.
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
-    tokenAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
+      description: 'Use the format: Token token=YOUR_API_KEY'

@@ -1,0 +1,72 @@
+openapi: 3.2.0
+info:
+  title: Accredible Departments API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
+  version: '1.0'
+  contact:
+    name: Accredible
+    url: https://www.accredible.com
+  license:
+    name: Proprietary
+    url: https://www.accredible.com/terms-of-service
+servers:
+- url: https://api.accredible.com/v1
+  description: Production
+- url: https://sandbox.api.accredible.com/v1
+  description: Sandbox
+security:
+- tokenAuth: []
+tags:
+- name: Departments
+  description: Independent sub-organizations within an issuer account.
+paths:
+  /departments/search:
+    post:
+      operationId: searchDepartments
+      tags:
+      - Departments
+      summary: Search for departments
+      description: Searches Departments - independent sub-organizations, each with their own Designs, Groups, and branding.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                page:
+                  type: integer
+                page_size:
+                  type: integer
+      responses:
+        '200':
+          description: Matching departments.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.

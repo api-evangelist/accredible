@@ -1,248 +1,487 @@
 openapi: 3.2.0
 info:
-  title: Accredible Designs API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
-  version: '1.0'
-  contact:
-    name: Accredible
-    url: https://www.accredible.com
-  license:
-    name: Proprietary
-    url: https://www.accredible.com/terms-of-service
+  title: Accredible Credential Designs API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
 servers:
-- url: https://api.accredible.com/v1
-  description: Production
-- url: https://sandbox.api.accredible.com/v1
-  description: Sandbox
-security:
-- tokenAuth: []
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
 tags:
 - name: Designs
-  description: Reusable visual specifications for rendering badges and certificates.
 paths:
-  /designs:
-    get:
-      operationId: listDesigns
-      deprecated: true
-      tags:
-      - Designs
-      summary: View all designs (deprecated)
-      description: Lists Designs, optionally filtered by kind and department.
-      parameters:
-      - name: kind
-        in: query
-        schema:
-          type: string
-          enum:
-          - certificate
-          - badge
-      - name: department_id
-        in: query
-        schema:
-          type: integer
+  /v1/designs:
+    post:
       responses:
         '200':
-          description: A list of designs.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-    post:
-      operationId: createDesign
+          description: OK
+          headers: {}
+          content: {}
+      summary: Create a Design
+      operationId: CreateADesign
+      description: ''
       tags:
       - Designs
-      summary: Create a design
-      description: Creates a new visual Design for badges or certificates.
       requestBody:
-        required: true
         content:
           application/json:
-            schema:
-              type: object
-              properties:
-                design:
-                  $ref: '#/components/schemas/DesignInput'
-      responses:
-        '200':
-          description: The created design.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designs/{design_id}:
-    parameters:
-    - $ref: '#/components/parameters/DesignId'
-    get:
-      operationId: getDesign
-      tags:
-      - Designs
-      summary: View a design
-      description: Retrieves a single Design by ID.
-      responses:
-        '200':
-          description: The requested design.
-        '404':
-          $ref: '#/components/responses/NotFound'
-    put:
-      operationId: updateDesign
-      tags:
-      - Designs
-      summary: Update a design
-      description: Updates an existing Design.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                design:
-                  $ref: '#/components/schemas/DesignInput'
-      responses:
-        '200':
-          description: The updated design.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-    delete:
-      operationId: deleteDesign
-      tags:
-      - Designs
-      summary: Delete a design
-      description: Deletes a Design by ID.
-      responses:
-        '200':
-          description: The design was deleted.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designs/{design_id}/copy:
-    post:
-      operationId: copyDesign
-      tags:
-      - Designs
-      summary: Copy a design
-      description: Creates a duplicate of an existing Design.
-      parameters:
-      - $ref: '#/components/parameters/DesignId'
-      responses:
-        '200':
-          description: The copied design.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designs/search:
-    post:
-      operationId: searchDesigns
-      tags:
-      - Designs
-      summary: Search for designs
-      description: Searches Designs by name, kind, and other attributes.
-      requestBody:
-        required: true
-        content:
-          application/json:
+            example:
+              design:
+                name: new design
+                kind: certificate
+                encoded_content: 31884284f406b9e481038c86ca81031031884284f406b9e481038c86ca810310
+                background_bleeds: true
+                orientation: landscape
+                size: a4
+                department_id: 123
             schema:
               type: object
               properties:
                 name:
                   type: string
+                  description: Name of the Design (for your reference and never shown to the recipient).
                 kind:
                   type: string
-                  enum:
-                  - certificate
-                  - badge
-                page:
-                  type: integer
-                page_size:
-                  type: integer
+                  description: Must be "certificate" or "badge" to specify the Design type.
+                encoded_content:
+                  type: string
+                  description: The encoded content of the design.
+                background_bleeds:
+                  type: boolean
+                  description: Specifies if the design should allow print bleeding.
+                orientation:
+                  type: string
+                  description: Must be "landscape" or "portrait" to specify a design's paper orientation.
+                size:
+                  type: string
+                  description: Must be "us-letter" or "a4" to specify a design's paper size.
+                department_id:
+                  type: number
+                  description: Department that the Design belongs to. If not defined the Design will be assigned to the organizations default department.
+                meta_data:
+                  type: object
+                  properties: {}
+                  description: You can use this parameter to attach key-value strings to the object. Meta data is useful for storing additional, structured information on an object.
+              required:
+              - name
+              - kind
+              - encoded_content
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designs\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"design\": {\n    \"name\": \"new design\",\n    \"kind\": \"certificate\",\n    \"encoded_content\": \"31884284f406b9e481038c86ca81031031884284f406b9e481038c86ca810310\",\n    \"background_bleeds\": true,\n    \"orientation\": \"landscape\",\n    \"size\": \"a4\",\n    \"department_id\": 123\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Create a Design
+    get:
       responses:
         '200':
-          description: Matching designs.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designs/{design_id}/preview:
-    post:
-      operationId: previewDesign
+          description: OK
+          headers: {}
+          content: {}
+      summary: View all Designs DEPRECATED
+      operationId: ViewAllDesignsDEPRECATED
+      description: '**DEPRECATED:** This endpoint is deprecated.'
+      deprecated: true
       tags:
       - Designs
-      summary: Preview a design
-      description: Renders a preview image of a Design with sample data.
       parameters:
-      - $ref: '#/components/parameters/DesignId'
+      - name: kind
+        in: query
+        description: Limit results to just "certificates" or "badges".
+        schema:
+          type: string
+      - name: department_id
+        in: query
+        description: Limit results to a particular Department.
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/designs\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View all Designs DEPRECATED
+  /v1/designs/{design_id}:
+    get:
       responses:
         '200':
-          description: A design preview.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designers/badge/initialize:
-    post:
-      operationId: initializeBadgeDesigner
+          description: OK
+          headers: {}
+          content: {}
+      summary: View a Design
+      operationId: ViewADesign
+      description: ''
       tags:
       - Designs
-      summary: Initialize embedded badge designer
-      description: Returns a session for the embedded badge designer experience.
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of an integer for the particular Design requested.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/designs/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View a Design
+    put:
       responses:
         '200':
-          description: An embedded badge designer session.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /designers/certificate/initialize:
-    post:
-      operationId: initializeCertificateDesigner
+          description: OK
+          headers: {}
+          content: {}
+      summary: Update a Design
+      operationId: UpdateADesign
+      description: ''
       tags:
       - Designs
-      summary: Initialize embedded certificate designer
-      description: Returns a session for the embedded certificate designer experience.
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of an integer for the particular Design requested.
+        required: true
+        schema:
+          type: number
+      requestBody:
+        content:
+          application/json:
+            example:
+              design:
+                name: updated new design
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the Design (for your reference and never shown to the recipient).
+                kind:
+                  type: string
+                  description: Must be "certificate" or "badge" to specify the Design type.
+                encoded_content:
+                  type: string
+                  description: The encoded content of the design.
+                background_bleeds:
+                  type: boolean
+                  description: Specifies if the design should allow print bleeding.
+                orientation:
+                  type: string
+                  description: Must be "landscape" or "portrait" to specify a design's paper orientation.
+                size:
+                  type: string
+                  description: Must be "us-letter" or "a4" to specify a design's paper size.
+                meta_data:
+                  type: object
+                  properties: {}
+                  description: You can use this parameter to attach key-value strings to the object. Meta data is useful for storing additional, structured information on an object.
+              required:
+              - name
+              - kind
+              - encoded_content
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X PUT \\\n  \"https://api.accredible.com/v1/designs/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"design\": {\n    \"name\": \"updated new design\"\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Update a Design
+    delete:
       responses:
         '200':
-          description: An embedded certificate designer session.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: OK
+          headers: {}
+          content: {}
+      summary: Delete a Design
+      operationId: DeleteADesign
+      description: ''
+      tags:
+      - Designs
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of an integer for the particular Design requested.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X DELETE \\\n  \"https://api.accredible.com/v1/designs/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete a Design
+  /v1/designs/{design_id}/copy:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Copy a Design
+      operationId: CopyADesign
+      description: ''
+      tags:
+      - Designs
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of an integer for the particular Design requested.
+        required: true
+        schema:
+          type: number
+      requestBody:
+        content:
+          application/json:
+            example:
+              design:
+                department_id: 12345
+            schema:
+              type: object
+              properties:
+                department_id:
+                  type: number
+                  description: Department that the Design belongs to. If not defined the Design will be assigned to the organizations default department.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designs/12345/copy\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"design\": {\n    \"department_id\": 12345\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Copy a Design
+  /v1/designs/search:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Search for Designs
+      operationId: SearchForDesigns
+      description: ''
+      tags:
+      - Designs
+      requestBody:
+        content:
+          application/json:
+            example:
+              kind: certificate
+              meta_data:
+                example: value
+            schema:
+              type: object
+              properties:
+                kind:
+                  type: string
+                meta_data:
+                  type: object
+                  properties:
+                    example:
+                      type: string
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designs/search\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"kind\": \"certificate\",\n  \"meta_data\": {\n    \"example\": \"value\"\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Search for Designs
+  /v1/designs/{design_id}/preview:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link:
+                    type: string
+              example:
+                link: https://example.api.accredible.com/design/image?env=red&design=f1a53a79-baeb-43fb-a19e-045af89eb206&data=e30:7a2f83ba4880d6d73f0a9d826ed82661108d8c8825984f3a77812704911e2142
+      summary: Preview a Design
+      operationId: PreviewADesign
+      description: ''
+      tags:
+      - Designs
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of an integer for the particular Design requested.
+        required: true
+        schema:
+          type: number
+      requestBody:
+        content:
+          application/json:
+            example:
+              recipient.name: example name
+              group.course_name: My Example Course
+              custom.example: Data for a custom attribute.
+            schema:
+              type: object
+              properties:
+                recipient.name:
+                  type: string
+                  description: Add any parameter that you wish to preview data for in your design.
+                group.course_name:
+                  type: string
+                  description: Add any parameter that you wish to preview data for in your design.
+                custom.example:
+                  type: string
+                  description: Add any parameter that you wish to preview data for in your design.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designs/12345/preview\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"recipient.name\": \"example name\",\n  \"group.course_name\": \"My Example Course\",\n  \"custom.example\": \"Data for a custom attribute.\"\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Preview a Design
+  /v1/designers/badge/initialize:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  design_id:
+                    type: number
+              example:
+                token: abc123:xyz456
+                design_id: 12345
+      summary: Initialize Embedded Badge Designer
+      operationId: InitializeEmbeddedBadgeDesigner
+      description: ''
+      tags:
+      - Designs
+      requestBody:
+        content:
+          application/json:
+            example:
+              design_id: 12345
+              department_id: 123
+            schema:
+              type: object
+              properties:
+                design_id:
+                  type: number
+                  description: ID of the Design in the form of an integer for a Design to be edited. Omitting the ID will result in a newly created design.
+                department_id:
+                  type: number
+                  description: ID of the Department which the Design should belong to.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designers/badge/initialize\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"design_id\": 12345,\n  \"department_id\": 123\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Initialize Embedded Badge Designer
+  /v1/designers/certificate/initialize:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  design_id:
+                    type: number
+              example:
+                token: abc123:xyz456
+                design_id: 12345
+      summary: Initialize Embedded Certificate Designer
+      operationId: InitializeEmbeddedCertificateDesigner
+      description: ''
+      tags:
+      - Designs
+      requestBody:
+        content:
+          application/json:
+            example:
+              design_id: 12345
+              department_id: 123
+            schema:
+              type: object
+              properties:
+                design_id:
+                  type: number
+                  description: ID of the Design in the form of an integer for a Design to be edited. Omitting the ID will result in a newly created design.
+                department_id:
+                  type: number
+                  description: ID of the Department which the Design should belong to.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/designers/certificate/initialize\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"design_id\": 12345,\n  \"department_id\": 123\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Initialize Embedded Certificate Designer
 components:
-  parameters:
-    DesignId:
-      name: design_id
-      in: path
-      required: true
-      description: The unique ID of the design.
-      schema:
-        type: integer
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-    DesignInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the design.
-        kind:
-          type: string
-          enum:
-          - certificate
-          - badge
-          description: Whether the design renders a certificate or a badge.
-        department_id:
-          type: integer
-          description: The department the design belongs to.
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
-    tokenAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
+      description: 'Use the format: Token token=YOUR_API_KEY'

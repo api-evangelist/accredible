@@ -1,70 +1,121 @@
 openapi: 3.2.0
 info:
-  title: Accredible SSO API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
-  version: '1.0'
-  contact:
-    name: Accredible
-    url: https://www.accredible.com
-  license:
-    name: Proprietary
-    url: https://www.accredible.com/terms-of-service
+  title: Accredible Credential SSO API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
 servers:
-- url: https://api.accredible.com/v1
-  description: Production
-- url: https://sandbox.api.accredible.com/v1
-  description: Sandbox
-security:
-- tokenAuth: []
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
 tags:
 - name: SSO
-  description: Recipient single sign-on link generation.
+  description: Accredible offers single sign-on solutions for recipients and issuers. Email support@accredible.com for a full list of options and to receive development assistance. SSO is also available via our Integrations and via SAML 2.0.
 paths:
-  /sso/generate_link:
+  /v1/sso/generate_link:
     post:
-      operationId: generateSsoLink
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link:
+                    type: string
+              example:
+                link: http://www.credential.net/10000005/sso?code=1330
+      summary: Generate SSO Link
+      operationId: GenerateSSOLink
+      description: 'This endpoint generates a single sign on link that authorizes the recipient on their credential.
+
+
+        The code expires after used once.'
       tags:
       - SSO
-      summary: Generate recipient SSO link
-      description: Generates a single sign-on link that lets a recipient access their credentials.
+      security:
+      - ApiKeyAuth: []
       requestBody:
-        required: true
         content:
           application/json:
+            example:
+              credential_id: '12345'
             schema:
               type: object
               properties:
-                recipient_email:
+                credential_id:
                   type: string
+                  description: The unique ID of the credential. If you supply your own internal ID as a license_id, you should use that.
                 recipient_id:
                   type: string
-      responses:
-        '200':
-          description: A recipient SSO link.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                  description: The recipient's user ID as defined by your organization. If more than one credential exists for your organization for this student, we give the link to their last (most recent) credential.
+                recipient_email:
+                  type: string
+                  description: The recipient's email address. If more than one credential exists in your organization for this student, we give a link to their last (most recent) credential.
+                wallet_view:
+                  type: boolean
+                  description: If multiple credentials belonging to the recipient requested for this organization and the wallet view flag is set true, we provide a link to the recipients credential wallet.
+                group_id:
+                  type: string
+                  description: The group that a credential belongs to. If more than one credential exists for your group for this student, we give the link to their last (most recent) credential.
+                redirect_to:
+                  type: string
+                  description: If the code is wrong, we will redirect student back to this link by default we use your registered url.
+                embed:
+                  type: boolean
+                  description: If the embed flag is set to true, we provide a link to the recipient's credential wallet embed page. This is only supported with wallet view.
+      x-codeSamples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST https://api.accredible.com/v1/sso/generate_link \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"credential_id\": \"12345\"}'"
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/sso/generate_link\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"credential_id\": \"12345\"\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Generate SSO Link
 components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
-    tokenAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
+      description: 'Use the format: Token token=YOUR_API_KEY'

@@ -1,0 +1,70 @@
+openapi: 3.2.0
+info:
+  title: Accredible SSO API
+  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
+  version: '1.0'
+  contact:
+    name: Accredible
+    url: https://www.accredible.com
+  license:
+    name: Proprietary
+    url: https://www.accredible.com/terms-of-service
+servers:
+- url: https://api.accredible.com/v1
+  description: Production
+- url: https://sandbox.api.accredible.com/v1
+  description: Sandbox
+security:
+- tokenAuth: []
+tags:
+- name: SSO
+  description: Recipient single sign-on link generation.
+paths:
+  /sso/generate_link:
+    post:
+      operationId: generateSsoLink
+      tags:
+      - SSO
+      summary: Generate recipient SSO link
+      description: Generates a single sign-on link that lets a recipient access their credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_email:
+                  type: string
+                recipient_id:
+                  type: string
+      responses:
+        '200':
+          description: A recipient SSO link.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable error message.
+        errors:
+          type: array
+          items:
+            type: string
+  responses:
+    Unauthorized:
+      description: Invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.

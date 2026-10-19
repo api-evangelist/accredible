@@ -1,217 +1,3197 @@
 openapi: 3.2.0
 info:
-  title: Accredible Groups API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
-  version: '1.0'
-  contact:
-    name: Accredible
-    url: https://www.accredible.com
-  license:
-    name: Proprietary
-    url: https://www.accredible.com/terms-of-service
+  title: Accredible Credential Groups API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
 servers:
-- url: https://api.accredible.com/v1
-  description: Production
-- url: https://sandbox.api.accredible.com/v1
-  description: Sandbox
-security:
-- tokenAuth: []
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
 tags:
 - name: Groups
-  description: Course or achievement containers that credentials are issued against.
+  description: 'Groups are similar to a course or a folder of Credentials. They contain information about the achievement and have multiple Credentials attached to them.
+
+
+    For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Descripion and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement.'
 paths:
-  /issuer/groups:
+  /v1/issuer/groups:
     post:
-      operationId: createGroup
-      tags:
-      - Groups
-      summary: Create a group
-      description: Creates a new Group (course or achievement) under the issuer account.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                group:
-                  $ref: '#/components/schemas/GroupInput'
       responses:
         '200':
-          description: The created group.
+          description: OK
+          headers: {}
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /issuer/groups/{group_id}:
-    parameters:
-    - $ref: '#/components/parameters/GroupId'
-    get:
-      operationId: getGroup
-      tags:
-      - Groups
-      summary: View a group
-      description: Retrieves a single Group by ID.
-      responses:
-        '200':
-          description: The requested group.
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      course_description:
+                        type: string
+                      course_name:
+                        type: string
+                      learning_outcomes:
+                        type: array
+                        items:
+                          type: string
+                      attach_pdf:
+                        type: boolean
+                      course_link:
+                        type: string
+                      language:
+                        type: string
+                      design_name:
+                        type: string
+                      updated_at:
+                        type: string
+                      created_at:
+                        type: string
+                      design_id:
+                        type: number
+                      blockchain:
+                        type: boolean
+                      certificate_design_id: {}
+                      badge_design_id: {}
+                      primary_design_id: {}
+                      department_id:
+                        type: number
+                      meta_data:
+                        type: object
+                        properties:
+                          foo:
+                            type: string
+                      generate_private_credential:
+                        type: boolean
+                      auto_expiry:
+                        type: number
+                      auto_expiry_unit:
+                        type: string
+                        enum:
+                        - years
+                        - months
+                      signup_url_show:
+                        type: boolean
+                      signup_url:
+                        type: string
+                      course_link_show:
+                        type: boolean
+                      organization_link_show:
+                        type: boolean
+                      skill_category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                      achievement_type:
+                        type: string
+                      collections:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - name
+                          - description
+                      earning_criteria:
+                        type: array
+                        description: Criteria the recipient must satisfy to earn this credential, ordered by `position`.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            kind:
+                              type: string
+                              enum:
+                              - achievement
+                              - certificate
+                              - competency
+                              - completion
+                              - course
+                              - degree
+                              - exam
+                              - experience
+                              - knowledge
+                              - license
+                              - participation
+                              - reading
+                              - skill
+                              - specialization
+                              - other
+                            text:
+                              type: string
+                            required:
+                              type: boolean
+                            position:
+                              type: number
+                          required:
+                          - id
+                          - kind
+                          - text
+                          - required
+                          - position
+                      skill_framework:
+                        type:
+                        - object
+                        - 'null'
+                        description: 'The Skill Framework this Group''s skills come from, with the version pinned on the Group nested under it.
+
+
+                          `null` when the Group uses free-text `learning_outcomes` instead. Present whenever the Group has a framework version pinned — **including a Group that has a framework but no skills attached**, so an object here does not imply that `skills` is non-empty.
+
+
+                          `skill_framework.version.id` is the only place a response reports the Group''s pinned version id, and it is the value to send back as `skill_framework_version_id` when you write. Retiring a version does not move a Group off it; the version changes only when the Group is explicitly migrated to a newly published one, and that applies retroactively to every credential already issued from the Group. See the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          source_type:
+                            type: string
+                            description: '`external` for a framework maintained by Accredible, `custom` for one uploaded by your organization.'
+                            enum:
+                            - external
+                            - custom
+                          taxonomy:
+                            type:
+                            - string
+                            - 'null'
+                            description: 'The published taxonomy an external framework comes from: `ONET`, `ESCO` or `NACE`. Always `null` for custom frameworks.'
+                          provider:
+                            type:
+                            - string
+                            - 'null'
+                            description: The organization that publishes the framework.
+                          description:
+                            type:
+                            - string
+                            - 'null'
+                          attribution:
+                            type: object
+                            description: Attribution that the framework's licence requires you to display wherever you show its skills.
+                            properties:
+                              text:
+                                type:
+                                - string
+                                - 'null'
+                              url:
+                                type:
+                                - string
+                                - 'null'
+                          version:
+                            type: object
+                            description: 'The framework version pinned on this Group — what it is actually issuing against, not the framework''s latest.
+
+
+                              `status` is the version''s own status. Unlike [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks), a version that is mid-retirement for your Department is not re-presented as `retired` here: that endpoint answers whether you can still select the version, whereas a Group records what it already uses.'
+                            properties:
+                              id:
+                                type: number
+                              version:
+                                type: string
+                              status:
+                                type: string
+                      skills:
+                        type: array
+                        description: 'Framework skills attached to this Group, ordered by name. Empty when the Group uses free-text `learning_outcomes`, and when it has a framework selected but no skills that can be tagged — unlike `skill_framework`, this is never `null`.
+
+
+                          Identical to the `skills` array on [Credential](#tag/Credentials) responses: both are built from the same payload, so the two surfaces cannot disagree.
+
+
+                          There is one entry per placement in the framework, so a skill sitting at two positions in the taxonomy appears as two entries — the same `id` with different `breadcrumbs`. **Do not key this array by `id`.**
+
+
+                          This is the read shape, and it differs from the write shape. To set a Group''s skills you send `framework_skills` as `{ id, breadcrumb_ids }` pairs; see [Update a Group](#operation/Update%20a%20Group).'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            identifier:
+                              type:
+                              - string
+                              - 'null'
+                              description: The framework's own external identifier for the skill — an O*NET element id, an ESCO URI, or whatever a custom framework was uploaded with. This is the field to match against your own systems. `null` when the framework does not provide one.
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                            url:
+                              type:
+                              - string
+                              - 'null'
+                              description: Link to the skill in the publisher's own taxonomy, when the framework provides one.
+                            breadcrumbs:
+                              type: array
+                              description: 'Where this skill sits in the framework: its ancestors from the root down to its immediate parent, with the skill itself excluded. Empty for a skill that sits at the root of the framework.
+
+
+                                Each node carries its own external `identifier` alongside its `id` and `name`. To write this placement back on the Group, send these `id` values in the same order as `framework_skills[].breadcrumb_ids`.'
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: number
+                                  name:
+                                    type: string
+                                  identifier:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    description: The ancestor's own external identifier in the framework, when it has one.
+                                required:
+                                - id
+                                - name
+                                - identifier
+                          required:
+                          - id
+                          - name
+                          - identifier
+                          - description
+                          - url
+                          - breadcrumbs
+              example:
+                group:
+                  id: 12472
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes:
+                  - Skill One
+                  - Skill Two
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: null
+                  badge_design_id: null
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data:
+                    foo: bar
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                  achievement_type: Certificate
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  - id: 2
+                    name: two
+                    description: description example
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001
+                    kind: course
+                    text: Complete the Intro to Programming course
+                    required: true
+                    position: 1
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0002
+                    kind: exam
+                    text: Pass the final exam with 70% or higher
+                    required: true
+                    position: 2
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59302
+                    name: Active Listening
+                    identifier: 2.A.1.b
+                    description: Giving full attention to what other people are saying, taking time to understand the points being made.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.b
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+        '207':
+          description: Multi-Status - the Group was created, but one or more framework skills could not be attached. The Group always exists; only skill attachment is partial.
+          headers: {}
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupEnvelope'
-        '404':
-          $ref: '#/components/responses/NotFound'
-    put:
-      operationId: updateGroup
-      tags:
-      - Groups
-      summary: Update a group
-      description: Updates an existing Group.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    description: The Group as it was saved. Every field is the same as in the `200` response — read `skill_framework` and `skills` to see what was actually attached.
+                  errors:
+                    type: array
+                    description: 'One entry per problem. More than one can be returned: input-shape problems come first, then `skills_not_attached`, then `breadcrumb_ids_invalid`. See [Skills Frameworks Error Handling](#section/Errors/Skills-Frameworks-Error-Handling) for what each code means.'
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          enum:
+                          - framework_params_incomplete
+                          - plan_not_entitled
+                          - version_not_found
+                          - framework_not_available
+                          - version_retired
+                          - framework_skills_malformed
+                          - skills_not_attached
+                          - breadcrumb_ids_invalid
+                        message:
+                          type: string
+                      required:
+                      - code
+                      - message
+              example:
                 group:
-                  $ref: '#/components/schemas/GroupInput'
-      responses:
-        '200':
-          description: The updated group.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-    delete:
-      operationId: deleteGroup
+                  id: 12472
+                  name: new group
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                errors:
+                - code: skills_not_attached
+                  message: 'One or more framework skills were not attached — they do not belong to framework version 512 or are not taggable: 999999991'
+      summary: Create a Group
+      operationId: CreateAGroup
+      description: ''
       tags:
       - Groups
-      summary: Delete a group
-      description: Deletes a Group by ID.
-      responses:
-        '200':
-          description: The group was deleted.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /issuer/all_groups:
-    get:
-      operationId: listAllGroups
-      deprecated: true
-      tags:
-      - Groups
-      summary: View all groups (deprecated)
-      description: Lists all Groups under the issuer account. Deprecated in favor of search.
-      parameters:
-      - name: name
-        in: query
-        schema:
-          type: string
-      - name: page
-        in: query
-        schema:
-          type: integer
-      - name: page_size
-        in: query
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: A list of groups.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /issuer/groups/search:
-    post:
-      operationId: searchGroups
-      tags:
-      - Groups
-      summary: Search for groups
-      description: Searches Groups by name and other attributes with pagination.
       requestBody:
-        required: true
         content:
           application/json:
+            example:
+              group:
+                name: new group
+                course_name: Intro to Prgramming
+                course_description: Description of course
+                course_link: http://www.example.com
+                language: en
+                attach_pdf: true
+                design_id: null
+                blockchain: false
+                certificate_design_id: null
+                badge_design_id: null
+                primary_design_id: null
+                department_id: 123
+                meta_data:
+                  batch_id: '271'
+                learning_outcomes:
+                - Reading Books
+                - Writing Essays
+                generate_private_credential: false
+                auto_expiry: 1
+                auto_expiry_unit: years
+                signup_url_show: false
+                signup_url: http://www.example.com
+                course_link_show: false
+                organization_link_show: false
+                skill_category_id: 1
+                achievement_type: Certificate
+                collections:
+                - id: 1
+                - id: 2
+                earning_criteria:
+                - kind: course
+                  text: Complete the Intro to Programming course
+                  required: true
+                  position: 1
+                - kind: exam
+                  text: Pass the final exam with 70% or higher
+                  required: true
+                  position: 2
+                skill_framework_version_id: 512
+                framework_skills:
+                - id: 59301
+                  breadcrumb_ids:
+                  - 59298
+                  - 59299
+                  - 59300
+                - id: 59302
+                  breadcrumb_ids:
+                  - 59298
+                  - 59299
+                  - 59300
             schema:
               type: object
               properties:
                 name:
                   type: string
-                page:
-                  type: integer
-                page_size:
-                  type: integer
+                  description: Name of the group (for your reference and never shown to the recipient).
+                course_name:
+                  type: string
+                  description: Name of the course or achievement. This is visible to the recipient.
+                course_description:
+                  type: string
+                  description: Description of the course or achievement. This is visible to the recipient.
+                course_link:
+                  type: string
+                  description: Link to the web page with information related to this Credential. Typically this is a course information or event information page.
+                language:
+                  type: string
+                  description: Language for the group. Currently we support "en", "es", "vi", "pt", "ja", "fr", "da", "nl", "fi", "no", "nb", "ro", "sv", "th", "tw", "zh", "tr", "ar", "he", "ms" and "de". Default language is en.
+                attach_pdf:
+                  type: boolean
+                  description: PDF of the Credential should be attached to email when recipient is informed. Default is false.
+                blockchain:
+                  type: boolean
+                  description: Enable or disable recording of these Credentials on a Blockchain.
+                design_id:
+                  type: number
+                  description: DEPRECATED. Certificate Design which the Group will use to display Credentials.
+                certificate_design_id:
+                  type: number
+                  description: Certificate Design which the Group will use to display Credentials.
+                badge_design_id:
+                  type: number
+                  description: Badge Design which the Group will use to display Credentials.
+                primary_design_id:
+                  type: number
+                  description: Primary Design which the Group will use to display Credentials.
+                department_id:
+                  type: number
+                  description: Department that the group belongs to. If not defined the group will be assigned to the organizations default department.
+                meta_data:
+                  type: object
+                  properties: {}
+                  description: You can use this parameter to attach key-value strings to the object. Meta data is useful for storing additional, structured information on an object.
+                learning_outcomes:
+                  description: 'Searchable keywords identifying skills credential-holders need to demonstrate (or have learned) in the process of earning this credential.
+
+
+                    To use skills from a recognized taxonomy instead of free text, see `framework_skills` and the [Skills Frameworks](#tag/Skills-Frameworks) endpoints. Both can be set on the same Group; where a credential displays a single skills list, framework skills take precedence.'
+                generate_private_credential:
+                  type: boolean
+                  description: The default value of `Credential.private` for the Group. The supported values are `true`, `false`, and `null`. When this is set to `true` or `false`, it will override `Department.generate_private_credential` and be used as the default of `Credential.private` when creating a new `Credential`. When this is set to `null`, it won't override `Department.generate_private_credential` which will be used for the default of `Credential.private` instead.
+                auto_expiry:
+                  type: number
+                  description: Specifies the number of years or months (see `auto_expiry_unit`) from the issue date after which the credential will automatically expire. If the specified value is less than or equal to 0, it will be ignored.
+                auto_expiry_unit:
+                  type: string
+                  enum:
+                  - years
+                  - months
+                  description: The unit of time for `auto_expiry`. Defaults to `years` if not supplied and `auto_expiry` exists.
+                signup_url:
+                  type: string
+                  description: This provides a direct path for credential viewers to enroll in your course.
+                signup_url_show:
+                  type: boolean
+                  description: Show or hide the sign up url. The supported values are `true`, `false` and `null`.
+                course_link_show:
+                  type: boolean
+                  description: This links the credential data record to your information about the credential on your website. The supported values are `true`, `false` and `null`.
+                organization_link_show:
+                  type: boolean
+                  description: Show or hide the link to your website homepage. The supported values are `true`, `false` and `null`.
+                allow_duplicate_credentials:
+                  type: boolean
+                  description: An email address can receive more than one credential. The supported values are `true` & `false`. Defaults to `false`.
+                skill_category_id:
+                  type: number
+                  description: ID of the skill category to associate with this group.
+                collections:
+                  description: Full list of collections to associate to this group
+                achievement_type:
+                  type: string
+                  description: The type of achievement, for example 'Award' or 'Certification'. The supported values are listed here https://www.imsglobal.org/spec/ob/v3p0#achievementtype-enumeration
+                earning_criteria:
+                  type: array
+                  description: Optional list of criteria the recipient must satisfy to earn this credential. Each item creates a new criterion on the group.
+                  items:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                        description: Category of the criterion.
+                        enum:
+                        - achievement
+                        - certificate
+                        - competency
+                        - completion
+                        - course
+                        - degree
+                        - exam
+                        - experience
+                        - knowledge
+                        - license
+                        - participation
+                        - reading
+                        - skill
+                        - specialization
+                        - other
+                      text:
+                        type: string
+                        description: 'Human-readable description of the criterion. Supports a limited set of HTML tags: `<a>` (with `href`, `title`, `target`, `rel`), `<p>`, `<br>`, `<hr>`, `<ul>`, `<ol>`, `<li>`, `<strong>`/`<b>`, `<em>`/`<i>`, `<u>`, `<sub>`, `<sup>`. Other tags and attributes are stripped on save.'
+                      required:
+                        type: boolean
+                        description: Whether the recipient must satisfy this criterion. Defaults to `true`.
+                      position:
+                        type: number
+                        description: Ordering within the group (1-based). Defaults to the next available position if omitted.
+                    required:
+                    - kind
+                    - text
+                skill_framework_version_id:
+                  type:
+                  - number
+                  - 'null'
+                  description: 'Id of the Skill Framework version to take skills from, as returned in a framework''s `versions` array by [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks). Must be sent together with `framework_skills`.
+
+
+                    Omit both this and `framework_skills` to create a Group that uses free-text `learning_outcomes` instead.
+
+
+                    This key is write-only. The response reports the Group''s pinned version as `skill_framework.version.id` instead, and its skills as `skills`.'
+                framework_skills:
+                  type:
+                  - array
+                  - 'null'
+                  description: 'Skills from `skill_framework_version_id` to attach to the Group, each entry a `{ id, breadcrumb_ids }` pair. Must be sent together with `skill_framework_version_id` and contain at least one skill — sending only one of the two keys, or an empty array, attaches nothing and returns a `207` with a `framework_params_incomplete` error.
+
+
+                    Every valid skill is attached; every invalid one is skipped and itemized in the `errors` array of a `207` response. The Group itself is always created, so read `skills` back from the response to see what was attached.'
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                        description: Id of the skill, as returned by [Search Skills in a Framework Version](#operation/Search%20Skills%20in%20a%20Framework%20Version).
+                      breadcrumb_ids:
+                        type: array
+                        description: 'Which position in the framework this skill is being attached at: the ids of its ancestors, from the root down to its immediate parent. Copy one of the trails from the skill''s `breadcrumbs` in the search response, in the same order.
+
+
+                          Only omit this, or send `[]`, for a skill that sits at the root of the framework. For a skill that has a parent an empty trail is rejected, and that skill is not attached.
+
+
+                          To attach the same skill at two different positions in the framework, send it twice with different `breadcrumb_ids`.'
+                        items:
+                          type: number
+                    required:
+                    - id
+              required:
+              - name
+              - course_name
+              - course_description
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/issuer/groups\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"group\": {\n    \"name\": \"new group\",\n    \"course_name\": \"Intro to Prgramming\",\n    \"course_description\": \"Description of course\",\n    \"course_link\": \"http://www.example.com\",\n    \"language\": \"en\",\n    \"attach_pdf\": true,\n    \"design_id\": null,\n    \"blockchain\": false,\n    \"certificate_design_id\": null,\n    \"badge_design_id\": null,\n    \"primary_design_id\": null,\n    \"department_id\": 123,\n    \"meta_data\": {\n      \"batch_id\": \"271\"\n    },\n    \"learning_outcomes\": [\n      \"Reading Books\",\n      \"Writing Essays\"\n    ],\n    \"generate_private_credential\": false,\n    \"auto_expiry\": 1,\n    \"auto_expiry_unit\": \"years\",\n    \"signup_url_show\": false,\n    \"signup_url\": \"http://www.example.com\",\n    \"course_link_show\": false,\n    \"organization_link_show\": false,\n    \"skill_category_id\": 1,\n    \"collections\": [\n      {\n        \"id\": 1\n      },\n      {\n        \"id\": 2\n      }\n    ],\n    \"earning_criteria\": [\n      {\n        \"kind\": \"course\",\n        \"text\": \"Complete the Intro to Programming course\",\n        \"required\": true,\n        \"position\": 1\n      },\n      {\n        \"kind\": \"exam\",\n        \"text\": \"Pass the final exam with 70% or higher\",\n        \"required\": true,\n        \"position\": 2\n      }\n    ],\n    \"skill_framework_version_id\": 512,\n    \"framework_skills\": [\n      {\n        \"id\": 59301,\n        \"breadcrumb_ids\": [\n          59298,\n          59299,\n          59300\n        ]\n      },\n      {\n        \"id\": 59302,\n        \"breadcrumb_ids\": [\n          59298,\n          59299,\n          59300\n        ]\n      }\n    ]\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Create a Group
+  /v1/issuer/groups/{group_id}:
+    get:
       responses:
         '200':
-          description: Matching groups.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      course_description:
+                        type: string
+                      course_name:
+                        type: string
+                      learning_outcomes: {}
+                      attach_pdf:
+                        type: boolean
+                      course_link:
+                        type: string
+                      language:
+                        type: string
+                      design_name:
+                        type: string
+                      updated_at:
+                        type: string
+                      created_at:
+                        type: string
+                      design_id:
+                        type: number
+                      blockchain:
+                        type: boolean
+                      certificate_design_id: {}
+                      badge_design_id: {}
+                      primary_design_id: {}
+                      department_id:
+                        type: number
+                      meta_data: {}
+                      generate_private_credential:
+                        type: boolean
+                      auto_expiry:
+                        type: number
+                      auto_expiry_unit:
+                        type: string
+                        enum:
+                        - years
+                        - months
+                      signup_url_show:
+                        type: boolean
+                      signup_url:
+                        type: string
+                      course_link_show:
+                        type: boolean
+                      organization_link_show:
+                        type: boolean
+                      skill_category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                      collections:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - name
+                          - description
+                      earning_criteria:
+                        type: array
+                        description: Criteria the recipient must satisfy to earn this credential, ordered by `position`. Returns an empty array when the group has none.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            kind:
+                              type: string
+                              description: Category of the criterion.
+                              enum:
+                              - achievement
+                              - certificate
+                              - competency
+                              - completion
+                              - course
+                              - degree
+                              - exam
+                              - experience
+                              - knowledge
+                              - license
+                              - participation
+                              - reading
+                              - skill
+                              - specialization
+                              - other
+                            text:
+                              type: string
+                              description: 'Human-readable description of the criterion. Supports a limited set of HTML tags: `<a>` (with `href`, `title`, `target`, `rel`), `<p>`, `<br>`, `<hr>`, `<ul>`, `<ol>`, `<li>`, `<strong>`/`<b>`, `<em>`/`<i>`, `<u>`, `<sub>`, `<sup>`. Other tags and attributes are stripped on save.'
+                            required:
+                              type: boolean
+                            position:
+                              type: number
+                              description: Ordering within the group (1-based).
+                          required:
+                          - id
+                          - kind
+                          - text
+                          - required
+                          - position
+                      skill_framework:
+                        type:
+                        - object
+                        - 'null'
+                        description: 'The Skill Framework this Group''s skills come from, with the version pinned on the Group nested under it.
+
+
+                          `null` when the Group uses free-text `learning_outcomes` instead. Present whenever the Group has a framework version pinned — **including a Group that has a framework but no skills attached**, so an object here does not imply that `skills` is non-empty.
+
+
+                          `skill_framework.version.id` is the only place a response reports the Group''s pinned version id, and it is the value to send back as `skill_framework_version_id` when you write. Retiring a version does not move a Group off it; the version changes only when the Group is explicitly migrated to a newly published one, and that applies retroactively to every credential already issued from the Group. See the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          source_type:
+                            type: string
+                            description: '`external` for a framework maintained by Accredible, `custom` for one uploaded by your organization.'
+                            enum:
+                            - external
+                            - custom
+                          taxonomy:
+                            type:
+                            - string
+                            - 'null'
+                            description: 'The published taxonomy an external framework comes from: `ONET`, `ESCO` or `NACE`. Always `null` for custom frameworks.'
+                          provider:
+                            type:
+                            - string
+                            - 'null'
+                            description: The organization that publishes the framework.
+                          description:
+                            type:
+                            - string
+                            - 'null'
+                          attribution:
+                            type: object
+                            description: Attribution that the framework's licence requires you to display wherever you show its skills.
+                            properties:
+                              text:
+                                type:
+                                - string
+                                - 'null'
+                              url:
+                                type:
+                                - string
+                                - 'null'
+                          version:
+                            type: object
+                            description: 'The framework version pinned on this Group — what it is actually issuing against, not the framework''s latest.
+
+
+                              `status` is the version''s own status. Unlike [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks), a version that is mid-retirement for your Department is not re-presented as `retired` here: that endpoint answers whether you can still select the version, whereas a Group records what it already uses.'
+                            properties:
+                              id:
+                                type: number
+                              version:
+                                type: string
+                              status:
+                                type: string
+                      skills:
+                        type: array
+                        description: 'Framework skills attached to this Group, ordered by name. Empty when the Group uses free-text `learning_outcomes`, and when it has a framework selected but no skills that can be tagged — unlike `skill_framework`, this is never `null`.
+
+
+                          Identical to the `skills` array on [Credential](#tag/Credentials) responses: both are built from the same payload, so the two surfaces cannot disagree.
+
+
+                          There is one entry per placement in the framework, so a skill sitting at two positions in the taxonomy appears as two entries — the same `id` with different `breadcrumbs`. **Do not key this array by `id`.**
+
+
+                          This is the read shape, and it differs from the write shape. To set a Group''s skills you send `framework_skills` as `{ id, breadcrumb_ids }` pairs; see [Update a Group](#operation/Update%20a%20Group).'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            identifier:
+                              type:
+                              - string
+                              - 'null'
+                              description: The framework's own external identifier for the skill — an O*NET element id, an ESCO URI, or whatever a custom framework was uploaded with. This is the field to match against your own systems. `null` when the framework does not provide one.
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                            url:
+                              type:
+                              - string
+                              - 'null'
+                              description: Link to the skill in the publisher's own taxonomy, when the framework provides one.
+                            breadcrumbs:
+                              type: array
+                              description: 'Where this skill sits in the framework: its ancestors from the root down to its immediate parent, with the skill itself excluded. Empty for a skill that sits at the root of the framework.
+
+
+                                Each node carries its own external `identifier` alongside its `id` and `name`. To write this placement back on the Group, send these `id` values in the same order as `framework_skills[].breadcrumb_ids`.'
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: number
+                                  name:
+                                    type: string
+                                  identifier:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    description: The ancestor's own external identifier in the framework, when it has one.
+                                required:
+                                - id
+                                - name
+                                - identifier
+                          required:
+                          - id
+                          - name
+                          - identifier
+                          - description
+                          - url
+                          - breadcrumbs
+              example:
+                group:
+                  id: 12472
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: null
+                  badge_design_id: null
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data: null
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                  achievement_type: null
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  - id: 2
+                    name: two
+                    description: description example
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001
+                    kind: course
+                    text: Complete the Intro to Programming course
+                    required: true
+                    position: 1
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0002
+                    kind: exam
+                    text: Pass the final exam with 70% or higher
+                    required: true
+                    position: 2
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59302
+                    name: Active Listening
+                    identifier: 2.A.1.b
+                    description: Giving full attention to what other people are saying, taking time to understand the points being made.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.b
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+      summary: View a Group
+      operationId: ViewAGroup
+      description: ''
+      tags:
+      - Groups
+      parameters:
+      - name: group_id
+        in: path
+        description: ID of the group in the form of an integer for the particular group requested.  You can obtain the group ID from the all groups request.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/issuer/groups/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View a Group
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      course_description:
+                        type: string
+                      course_name:
+                        type: string
+                      learning_outcomes: {}
+                      attach_pdf:
+                        type: boolean
+                      course_link:
+                        type: string
+                      language:
+                        type: string
+                      design_name:
+                        type: string
+                      updated_at:
+                        type: string
+                      created_at:
+                        type: string
+                      design_id:
+                        type: number
+                      blockchain:
+                        type: boolean
+                      certificate_design_id: {}
+                      badge_design_id: {}
+                      primary_design_id: {}
+                      department_id:
+                        type: number
+                      meta_data:
+                        type: object
+                        properties:
+                          foo:
+                            type: string
+                      generate_private_credential:
+                        type: boolean
+                      auto_expiry:
+                        type: number
+                      auto_expiry_unit:
+                        type: string
+                        enum:
+                        - years
+                        - months
+                      signup_url_show:
+                        type: boolean
+                      signup_url:
+                        type: string
+                      course_link_show:
+                        type: boolean
+                      organization_link_show:
+                        type: boolean
+                      skill_category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                      achievement_type:
+                        type: string
+                      collections:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - name
+                          - description
+                      earning_criteria:
+                        type: array
+                        description: Criteria the recipient must satisfy to earn this credential, ordered by `position`.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            kind:
+                              type: string
+                              enum:
+                              - achievement
+                              - certificate
+                              - competency
+                              - completion
+                              - course
+                              - degree
+                              - exam
+                              - experience
+                              - knowledge
+                              - license
+                              - participation
+                              - reading
+                              - skill
+                              - specialization
+                              - other
+                            text:
+                              type: string
+                            required:
+                              type: boolean
+                            position:
+                              type: number
+                          required:
+                          - id
+                          - kind
+                          - text
+                          - required
+                          - position
+                      skill_framework:
+                        type:
+                        - object
+                        - 'null'
+                        description: 'The Skill Framework this Group''s skills come from, with the version pinned on the Group nested under it.
+
+
+                          `null` when the Group uses free-text `learning_outcomes` instead. Present whenever the Group has a framework version pinned — **including a Group that has a framework but no skills attached**, so an object here does not imply that `skills` is non-empty.
+
+
+                          `skill_framework.version.id` is the only place a response reports the Group''s pinned version id, and it is the value to send back as `skill_framework_version_id` when you write. Retiring a version does not move a Group off it; the version changes only when the Group is explicitly migrated to a newly published one, and that applies retroactively to every credential already issued from the Group. See the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          source_type:
+                            type: string
+                            description: '`external` for a framework maintained by Accredible, `custom` for one uploaded by your organization.'
+                            enum:
+                            - external
+                            - custom
+                          taxonomy:
+                            type:
+                            - string
+                            - 'null'
+                            description: 'The published taxonomy an external framework comes from: `ONET`, `ESCO` or `NACE`. Always `null` for custom frameworks.'
+                          provider:
+                            type:
+                            - string
+                            - 'null'
+                            description: The organization that publishes the framework.
+                          description:
+                            type:
+                            - string
+                            - 'null'
+                          attribution:
+                            type: object
+                            description: Attribution that the framework's licence requires you to display wherever you show its skills.
+                            properties:
+                              text:
+                                type:
+                                - string
+                                - 'null'
+                              url:
+                                type:
+                                - string
+                                - 'null'
+                          version:
+                            type: object
+                            description: 'The framework version pinned on this Group — what it is actually issuing against, not the framework''s latest.
+
+
+                              `status` is the version''s own status. Unlike [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks), a version that is mid-retirement for your Department is not re-presented as `retired` here: that endpoint answers whether you can still select the version, whereas a Group records what it already uses.'
+                            properties:
+                              id:
+                                type: number
+                              version:
+                                type: string
+                              status:
+                                type: string
+                      skills:
+                        type: array
+                        description: 'Framework skills attached to this Group, ordered by name. Empty when the Group uses free-text `learning_outcomes`, and when it has a framework selected but no skills that can be tagged — unlike `skill_framework`, this is never `null`.
+
+
+                          Identical to the `skills` array on [Credential](#tag/Credentials) responses: both are built from the same payload, so the two surfaces cannot disagree.
+
+
+                          There is one entry per placement in the framework, so a skill sitting at two positions in the taxonomy appears as two entries — the same `id` with different `breadcrumbs`. **Do not key this array by `id`.**
+
+
+                          This is the read shape, and it differs from the write shape. To set a Group''s skills you send `framework_skills` as `{ id, breadcrumb_ids }` pairs; see [Update a Group](#operation/Update%20a%20Group).'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            identifier:
+                              type:
+                              - string
+                              - 'null'
+                              description: The framework's own external identifier for the skill — an O*NET element id, an ESCO URI, or whatever a custom framework was uploaded with. This is the field to match against your own systems. `null` when the framework does not provide one.
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                            url:
+                              type:
+                              - string
+                              - 'null'
+                              description: Link to the skill in the publisher's own taxonomy, when the framework provides one.
+                            breadcrumbs:
+                              type: array
+                              description: 'Where this skill sits in the framework: its ancestors from the root down to its immediate parent, with the skill itself excluded. Empty for a skill that sits at the root of the framework.
+
+
+                                Each node carries its own external `identifier` alongside its `id` and `name`. To write this placement back on the Group, send these `id` values in the same order as `framework_skills[].breadcrumb_ids`.'
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: number
+                                  name:
+                                    type: string
+                                  identifier:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    description: The ancestor's own external identifier in the framework, when it has one.
+                                required:
+                                - id
+                                - name
+                                - identifier
+                          required:
+                          - id
+                          - name
+                          - identifier
+                          - description
+                          - url
+                          - breadcrumbs
+              example:
+                group:
+                  id: 12472
+                  name: updated new group
+                  course_description: Desscription of course
+                  course_name: updated course name
+                  learning_outcomes: null
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: null
+                  badge_design_id: null
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data:
+                    foo: bar
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                  achievement_type: Badge
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  - id: 2
+                    name: two
+                    description: description example
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001
+                    kind: course
+                    text: Complete the updated course
+                    required: true
+                    position: 1
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0003
+                    kind: degree
+                    text: Hold an associated degree
+                    required: false
+                    position: 2
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59302
+                    name: Active Listening
+                    identifier: 2.A.1.b
+                    description: Giving full attention to what other people are saying, taking time to understand the points being made.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.b
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+        '207':
+          description: Multi-Status - the Group was updated, but one or more framework skills could not be attached. Non-framework changes in the request are still saved.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    description: The Group as it was saved. Every field is the same as in the `200` response — read `skill_framework` and `skills` to see what was actually attached.
+                  errors:
+                    type: array
+                    description: 'One entry per problem. More than one can be returned: input-shape problems come first, then `skills_not_attached`, then `breadcrumb_ids_invalid`. See [Skills Frameworks Error Handling](#section/Errors/Skills-Frameworks-Error-Handling) for what each code means.'
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          enum:
+                          - framework_params_incomplete
+                          - plan_not_entitled
+                          - version_not_found
+                          - framework_not_available
+                          - version_retired
+                          - framework_skills_malformed
+                          - skills_not_attached
+                          - breadcrumb_ids_invalid
+                        message:
+                          type: string
+                      required:
+                      - code
+                      - message
+              example:
+                group:
+                  id: 12472
+                  name: updated new group
+                  course_name: updated course name
+                  learning_outcomes: null
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                errors:
+                - code: version_retired
+                  message: Skills were not attached — framework version 511 has been retired. Use the active version to attach skills.
+        '403':
+          description: 'Forbidden - your plan does not include access to skills frameworks, and the request tried to change the framework skills of a Group that is already framework-backed. Nothing in the request is saved, including changes to unrelated fields. The Group''s framework and skills stay saved and readable, and moving it to free-text skills by sending `"framework_skills": null` is still allowed.'
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: string
+              example:
+                success: false
+                data: Your plan no longer supports this framework. Contact support to upgrade.
+      summary: Update a Group
+      operationId: UpdateAGroup
+      description: ''
+      tags:
+      - Groups
+      parameters:
+      - name: group_id
+        in: path
+        description: ID of the group in the form of an integer for the particular group requested. You can obtain the group ID from the all groups request.
+        required: true
+        schema:
+          type: number
+      requestBody:
+        content:
+          application/json:
+            example:
+              group:
+                name: updated new group
+                course_name: updated course name
+                skill_category_id: 1
+                achievement_type: Badge
+                collections:
+                - id: 1
+                - id: 2
+                earning_criteria:
+                - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001
+                  text: Complete the updated course
+                - kind: degree
+                  text: Hold an associated degree
+                  required: false
+                  position: 2
+                skill_framework_version_id: 512
+                framework_skills:
+                - id: 59301
+                  breadcrumb_ids:
+                  - 59298
+                  - 59299
+                  - 59300
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the group (for your reference and never shown to the recipient).
+                course_name:
+                  type: string
+                  description: Name of the course or achievement. This is visible to the recipient.
+                course_description:
+                  type: string
+                  description: Description of the course or achievement. This is visible to the recipient.
+                course_link:
+                  type: string
+                  description: Link to the web page with information related to this Credential. Typically this is a course information or event information page.
+                langauge:
+                  type: string
+                  description: Language for the group. Currently we support "en", "es", "vi", "pt", "ja", "fr", "da", "nl", "fi", "no", "nb", "ro", "sv", "th", "tw", "zh", "tr", "ar", "he", "ms" and "de". Default language is en.
+                attach_pdf:
+                  type: boolean
+                  description: PDF of the Credential should be attached to email when recipient is informed. Default is false.
+                blockchain:
+                  type: boolean
+                  description: Enable or disable recording of these Credentials on a Blockchain.
+                design_id:
+                  type: number
+                  description: DEPRECATED. Certificate Design which the Group will use to display Credentials.
+                certificate_design_id:
+                  type: number
+                  description: Certificate Design which the Group will use to display Credentials.
+                badge_design_id:
+                  type: number
+                  description: Badge Design which the Group will use to display Credentials.
+                primary_design_id:
+                  type: number
+                  description: Primary Design which the Group will use to display Credentials.
+                department_id:
+                  type: number
+                  description: Department that the group belongs to. If not defined the group will be assigned to the organizations default department.
+                meta_data:
+                  type: object
+                  properties: {}
+                  description: You can use this parameter to attach key-value strings to the object. Meta data is useful for storing additional, structured information on an object.
+                learning_outcomes:
+                  description: 'Searchable keywords identifying skills credential-holders need to demonstrate (or have learned) in the process of earning this credential.
+
+
+                    To use skills from a recognized taxonomy instead of free text, see `framework_skills` and the [Skills Frameworks](#tag/Skills-Frameworks) endpoints. Both can be set on the same Group; where a credential displays a single skills list, framework skills take precedence.'
+                generate_private_credential:
+                  type: boolean
+                  description: The default value of `Credential.private` for the Group. The supported values are `true`, `false`, and `null`. When this is set to `true` or `false`, it will override `Department.generate_private_credential` and be used as the default of `Credential.private` when creating a new `Credential`. When this is set to `null`, it won't override `Department.generate_private_credential` which will be used for the default of `Credential.private` instead.
+                auto_expiry:
+                  type: number
+                  description: Specifies the number of years or months (see `auto_expiry_unit`) from the issue date after which the credential will automatically expire. If the specified value is less than or equal to 0, it will be ignored.
+                auto_expiry_unit:
+                  type: string
+                  enum:
+                  - years
+                  - months
+                  description: The unit of time for `auto_expiry`. Defaults to `years` if not supplied and `auto_expiry` exists.
+                signup_url:
+                  type: string
+                  description: This provides a direct path for credential viewers to enroll in your course.
+                signup_url_show:
+                  type: boolean
+                  description: Show or hide the sign up url. The supported values are `true`, `false` and `null`.
+                course_link_show:
+                  type: boolean
+                  description: This links the credential data record to your information about the credential on your website. The supported values are `true`, `false` and `null`.
+                organization_link_show:
+                  type: boolean
+                  description: Show or hide the link to your website homepage. The supported values are `true`, `false` and `null`.
+                allow_duplicate_credentials:
+                  type: boolean
+                  description: An email address can receive more than one credential. The supported values are `true` & `false`. Defaults to `false`.
+                skill_category_id:
+                  type: number
+                  description: ID of the skill category to associate with this group.
+                achievement_type:
+                  type: string
+                  description: The type of achievement, for example 'Award' or 'Certification'. The supported values are listed here https://www.imsglobal.org/spec/ob/v3p0#achievementtype-enumeration
+                collections:
+                  description: Full list of collections to associate to this group
+                earning_criteria:
+                  type:
+                  - array
+                  - 'null'
+                  description: 'Full list of earning criteria to associate to this group. **Omit the key** to leave existing criteria untouched. **Send `[]` or `null`** to delete every criterion on the group. Otherwise the array is treated as the complete desired state:
+
+
+                    - Items **with** an `id` matching an existing criterion are updated in place.
+
+                    - Items **without** an `id` are created.
+
+                    - Existing criteria **absent** from the array are deleted.
+
+
+                    If any supplied `id` does not belong to the target group, the entire request fails with HTTP 400 and no changes are persisted.'
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: Include to update an existing criterion. Omit to create a new one.
+                      kind:
+                        type: string
+                        description: Category of the criterion. Required when creating a new criterion.
+                        enum:
+                        - achievement
+                        - certificate
+                        - competency
+                        - completion
+                        - course
+                        - degree
+                        - exam
+                        - experience
+                        - knowledge
+                        - license
+                        - participation
+                        - reading
+                        - skill
+                        - specialization
+                        - other
+                      text:
+                        type: string
+                        description: 'Human-readable description of the criterion. Required when creating a new criterion. Supports a limited set of HTML tags: `<a>` (with `href`, `title`, `target`, `rel`), `<p>`, `<br>`, `<hr>`, `<ul>`, `<ol>`, `<li>`, `<strong>`/`<b>`, `<em>`/`<i>`, `<u>`, `<sub>`, `<sup>`. Other tags and attributes are stripped on save.'
+                      required:
+                        type: boolean
+                        description: Whether the recipient must satisfy this criterion. Defaults to `true` when creating.
+                      position:
+                        type: number
+                        description: Ordering within the group (1-based).
+                skill_framework_version_id:
+                  type:
+                  - number
+                  - 'null'
+                  description: 'Id of the Skill Framework version the Group''s skills should come from, as returned in a framework''s `versions` array by [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks). Send it together with `framework_skills` to set or change the Group''s framework.
+
+
+                    This key is write-only. The response reports the Group''s pinned version as `skill_framework.version.id` instead, and its skills as `skills`.'
+                framework_skills:
+                  type:
+                  - array
+                  - 'null'
+                  description: 'Full list of framework skills for the Group, each entry a `{ id, breadcrumb_ids }` pair. The array **replaces** the Group''s current skills rather than adding to them.
+
+
+                    - **Omit both this and `skill_framework_version_id`** to leave the Group''s framework and skills exactly as they are.
+
+                    - **Send `null` or `[]`** without `skill_framework_version_id` to move the Group off frameworks: the framework is cleared, every attached skill is removed, and `learning_outcomes` can be set in the same request.
+
+                    - **Send both keys** to make the Group''s skills exactly what you supply. Passing a different version also moves the Group to that version.
+
+
+                    Every valid skill is attached; every invalid one is skipped and itemized in the `errors` array of a `207` response. If none of the supplied skills are valid, the Group keeps the framework and skills it already had.'
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                        description: Id of the skill, as returned by [Search Skills in a Framework Version](#operation/Search%20Skills%20in%20a%20Framework%20Version).
+                      breadcrumb_ids:
+                        type: array
+                        description: 'Which position in the framework this skill is being attached at: the ids of its ancestors, from the root down to its immediate parent. Copy one of the trails from the skill''s `breadcrumbs` in the search response, in the same order.
+
+
+                          Only omit this, or send `[]`, for a skill that sits at the root of the framework. For a skill that has a parent an empty trail is rejected, and that skill is not attached.
+
+
+                          To attach the same skill at two different positions in the framework, send it twice with different `breadcrumb_ids`.'
+                        items:
+                          type: number
+                    required:
+                    - id
+              required:
+              - name
+              - course_name
+              - course_description
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X PUT \\\n  \"https://api.accredible.com/v1/issuer/groups/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"group\": {\n    \"name\": \"updated new group\",\n    \"course_name\": \"updated course name\",\n    \"skill_category_id\": 1,\n    \"collections\": [\n      {\n        \"id\": 1\n      },\n      {\n        \"id\": 2\n      }\n    ],\n    \"earning_criteria\": [\n      {\n        \"id\": \"8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001\",\n        \"text\": \"Complete the updated course\"\n      },\n      {\n        \"kind\": \"degree\",\n        \"text\": \"Hold an associated degree\",\n        \"required\": false,\n        \"position\": 2\n      }\n    ],\n    \"skill_framework_version_id\": 512,\n    \"framework_skills\": [\n      {\n        \"id\": 59301,\n        \"breadcrumb_ids\": [\n          59298,\n          59299,\n          59300\n        ]\n      }\n    ]\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Update a Group
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      course_description:
+                        type: string
+                      course_name:
+                        type: string
+                      learning_outcomes: {}
+                      attach_pdf:
+                        type: boolean
+                      course_link:
+                        type: string
+                      language:
+                        type: string
+                      design_name:
+                        type: string
+                      updated_at:
+                        type: string
+                      created_at:
+                        type: string
+                      design_id:
+                        type: number
+                      blockchain:
+                        type: boolean
+                      certificate_design_id: {}
+                      badge_design_id: {}
+                      primary_design_id: {}
+                      department_id:
+                        type: number
+                      meta_data: {}
+                      generate_private_credential:
+                        type: boolean
+                      auto_expiry:
+                        type: number
+                      auto_expiry_unit:
+                        type: string
+                        enum:
+                        - years
+                        - months
+                      signup_url_show:
+                        type: boolean
+                      signup_url:
+                        type: string
+                      course_link_show:
+                        type: boolean
+                      organization_link_show:
+                        type: boolean
+                      achievement_type:
+                        type: string
+                      skill_category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+              example:
+                group:
+                  id: 12472
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: null
+                  badge_design_id: null
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data: null
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  achievement_type: null
+                  skill_category:
+                    id: 1
+                    name: Example Category
+      summary: Delete a Group
+      operationId: DeleteAGroup
+      description: ''
+      tags:
+      - Groups
+      parameters:
+      - name: group_id
+        in: path
+        description: ID of the Group in the form of an integer for the particular Group requested. You can obtain the Group ID from the all groups request.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X DELETE \\\n  \"https://api.accredible.com/v1/issuer/groups/12345\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete a Group
+  /v1/issuer/groups/{group_id}/clone:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      course_description:
+                        type: string
+                      course_name:
+                        type: string
+                      learning_outcomes:
+                        type: array
+                        items:
+                          type: string
+                      attach_pdf:
+                        type: boolean
+                      course_link:
+                        type: string
+                      language:
+                        type: string
+                      design_name:
+                        type: string
+                      updated_at:
+                        type: string
+                      created_at:
+                        type: string
+                      design_id:
+                        type: number
+                      blockchain:
+                        type: boolean
+                      certificate_design_id: {}
+                      badge_design_id: {}
+                      primary_design_id: {}
+                      department_id:
+                        type: number
+                      meta_data:
+                        type: object
+                        properties:
+                          foo:
+                            type: string
+                      generate_private_credential:
+                        type: boolean
+                      auto_expiry:
+                        type: number
+                      auto_expiry_unit:
+                        type: string
+                        enum:
+                        - years
+                        - months
+                      signup_url_show:
+                        type: boolean
+                      signup_url:
+                        type: string
+                      course_link_show:
+                        type: boolean
+                      organization_link_show:
+                        type: boolean
+                      skill_category:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                      achievement_type:
+                        type: string
+                      collections:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - name
+                          - description
+                      earning_criteria:
+                        type: array
+                        description: Criteria the recipient must satisfy to earn this credential, ordered by `position`. Inherited from the original group when `earning_criteria` is omitted from the request.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            kind:
+                              type: string
+                              enum:
+                              - achievement
+                              - certificate
+                              - competency
+                              - completion
+                              - course
+                              - degree
+                              - exam
+                              - experience
+                              - knowledge
+                              - license
+                              - participation
+                              - reading
+                              - skill
+                              - specialization
+                              - other
+                            text:
+                              type: string
+                            required:
+                              type: boolean
+                            position:
+                              type: number
+                          required:
+                          - id
+                          - kind
+                          - text
+                          - required
+                          - position
+                      skill_framework:
+                        type:
+                        - object
+                        - 'null'
+                        description: 'The Skill Framework this Group''s skills come from, with the version pinned on the Group nested under it.
+
+
+                          `null` when the Group uses free-text `learning_outcomes` instead. Present whenever the Group has a framework version pinned — **including a Group that has a framework but no skills attached**, so an object here does not imply that `skills` is non-empty.
+
+
+                          `skill_framework.version.id` is the only place a response reports the Group''s pinned version id, and it is the value to send back as `skill_framework_version_id` when you write. Retiring a version does not move a Group off it; the version changes only when the Group is explicitly migrated to a newly published one, and that applies retroactively to every credential already issued from the Group. See the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          source_type:
+                            type: string
+                            description: '`external` for a framework maintained by Accredible, `custom` for one uploaded by your organization.'
+                            enum:
+                            - external
+                            - custom
+                          taxonomy:
+                            type:
+                            - string
+                            - 'null'
+                            description: 'The published taxonomy an external framework comes from: `ONET`, `ESCO` or `NACE`. Always `null` for custom frameworks.'
+                          provider:
+                            type:
+                            - string
+                            - 'null'
+                            description: The organization that publishes the framework.
+                          description:
+                            type:
+                            - string
+                            - 'null'
+                          attribution:
+                            type: object
+                            description: Attribution that the framework's licence requires you to display wherever you show its skills.
+                            properties:
+                              text:
+                                type:
+                                - string
+                                - 'null'
+                              url:
+                                type:
+                                - string
+                                - 'null'
+                          version:
+                            type: object
+                            description: 'The framework version pinned on this Group — what it is actually issuing against, not the framework''s latest.
+
+
+                              `status` is the version''s own status. Unlike [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks), a version that is mid-retirement for your Department is not re-presented as `retired` here: that endpoint answers whether you can still select the version, whereas a Group records what it already uses.'
+                            properties:
+                              id:
+                                type: number
+                              version:
+                                type: string
+                              status:
+                                type: string
+                      skills:
+                        type: array
+                        description: 'Framework skills attached to this Group, ordered by name. Empty when the Group uses free-text `learning_outcomes`, and when it has a framework selected but no skills that can be tagged — unlike `skill_framework`, this is never `null`.
+
+
+                          Identical to the `skills` array on [Credential](#tag/Credentials) responses: both are built from the same payload, so the two surfaces cannot disagree.
+
+
+                          There is one entry per placement in the framework, so a skill sitting at two positions in the taxonomy appears as two entries — the same `id` with different `breadcrumbs`. **Do not key this array by `id`.**
+
+
+                          This is the read shape, and it differs from the write shape. To set a Group''s skills you send `framework_skills` as `{ id, breadcrumb_ids }` pairs; see [Update a Group](#operation/Update%20a%20Group).'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            identifier:
+                              type:
+                              - string
+                              - 'null'
+                              description: The framework's own external identifier for the skill — an O*NET element id, an ESCO URI, or whatever a custom framework was uploaded with. This is the field to match against your own systems. `null` when the framework does not provide one.
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                            url:
+                              type:
+                              - string
+                              - 'null'
+                              description: Link to the skill in the publisher's own taxonomy, when the framework provides one.
+                            breadcrumbs:
+                              type: array
+                              description: 'Where this skill sits in the framework: its ancestors from the root down to its immediate parent, with the skill itself excluded. Empty for a skill that sits at the root of the framework.
+
+
+                                Each node carries its own external `identifier` alongside its `id` and `name`. To write this placement back on the Group, send these `id` values in the same order as `framework_skills[].breadcrumb_ids`.'
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: number
+                                  name:
+                                    type: string
+                                  identifier:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    description: The ancestor's own external identifier in the framework, when it has one.
+                                required:
+                                - id
+                                - name
+                                - identifier
+                          required:
+                          - id
+                          - name
+                          - identifier
+                          - description
+                          - url
+                          - breadcrumbs
+              example:
+                group:
+                  id: 12345
+                  name: new group copy
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes:
+                  - Skill One
+                  - Skill Two
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: null
+                  badge_design_id: null
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data:
+                    foo: bar
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Skill Category
+                  achievement_type: Badge
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  - id: 2
+                    name: two
+                    description: description example
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0201
+                    kind: course
+                    text: Complete the Intro to Programming course
+                    required: true
+                    position: 1
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0202
+                    kind: exam
+                    text: Pass the final exam with 70% or higher
+                    required: true
+                    position: 2
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59302
+                    name: Active Listening
+                    identifier: 2.A.1.b
+                    description: Giving full attention to what other people are saying, taking time to understand the points being made.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.b
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+        '207':
+          description: Multi-Status - the Group was cloned, but the original Group's framework skills could not be copied because its framework version has been retired, or its framework is mid-retirement for that Department. The clone is created without a framework.
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    description: The Group as it was saved. Every field is the same as in the `200` response — read `skill_framework` and `skills` to see what was actually attached.
+                  errors:
+                    type: array
+                    description: 'One entry per problem. More than one can be returned: input-shape problems come first, then `skills_not_attached`, then `breadcrumb_ids_invalid`. See [Skills Frameworks Error Handling](#section/Errors/Skills-Frameworks-Error-Handling) for what each code means.'
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          enum:
+                          - framework_params_incomplete
+                          - plan_not_entitled
+                          - version_not_found
+                          - framework_not_available
+                          - version_retired
+                          - framework_skills_malformed
+                          - skills_not_attached
+                          - breadcrumb_ids_invalid
+                        message:
+                          type: string
+                      required:
+                      - code
+                      - message
+              example:
+                group:
+                  id: 12345
+                  name: new group copy
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  skill_framework: null
+                  skills: []
+                errors:
+                - code: version_retired
+                  message: Skills were not copied — framework version 511 has been retired. The group was cloned without framework skills; re-version the framework to copy them.
+      summary: Clone a Group
+      operationId: CloneAGroup
+      description: 'You can clone a group using this action. Add attributes to override cloned values. Cloning a group only works when certificate or badge designs are within the same department as the original group.
+
+
+        A clone always mirrors the original Group''s skills framework. Every framework skill on the original is copied to the clone at the same position in the framework, and `skill_framework_version_id` and `framework_skills` sent in the request body are **ignored** — you cannot clone a Group onto a different framework. To change the clone''s skills, clone it first and then update it.
+
+
+        If the original Group''s framework version has been retired — or its framework is mid-retirement for the original Group''s Department, in which case the version itself still reads as `active` — the clone is created without a framework and a `207` is returned. Re-version the framework first if you need the skills copied.'
+      tags:
+      - Groups
+      requestBody:
+        content:
+          application/json:
+            example:
+              group:
+                name: new group copy
+                course_name: Intro to Prgramming
+                course_description: Description of course
+                course_link: http://www.example.com
+                language: en
+                attach_pdf: true
+                blockchain: false
+                certificate_design_id: null
+                badge_design_id: null
+                primary_design_id: null
+                meta_data:
+                  batch_id: '271'
+                learning_outcomes:
+                - Reading Books
+                - Writing Essays
+                generate_private_credential: false
+                auto_expiry: 1
+                auto_expiry_unit: years
+                signup_url_show: false
+                signup_url: http://www.example.com
+                course_link_show: false
+                organization_link_show: false
+                skill_category_id: 1
+                achievement_type: Badge
+                earning_criteria:
+                - kind: course
+                  text: Complete the Intro to Programming course
+                  required: true
+                  position: 1
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the group (for your reference and never shown to the recipient). `Copy` will be added to the beginning of name of the new cloned group when a new name is not provided.
+                course_name:
+                  type: string
+                  description: Name of the course or achievement. This is visible to the recipient.
+                course_description:
+                  type: string
+                  description: Description of the course or achievement. This is visible to the recipient.
+                course_link:
+                  type: string
+                  description: Link to the web page with information related to this Credential. Typically this is a course information or event information page.
+                language:
+                  type: string
+                  description: Language for the group. Currently we support "en", "es", "vi", "pt", "ja", "fr", "da", "nl", "fi", "no", "nb", "ro", "sv", "th", "tw", "zh", "tr", "ar", "he", "ms" and "de". Default language is en.
+                attach_pdf:
+                  type: boolean
+                  description: PDF of the Credential should be attached to email when recipient is informed. Default is false.
+                blockchain:
+                  type: boolean
+                  description: Enable or disable recording of these Credentials on a Blockchain.
+                certificate_design_id:
+                  type: number
+                  description: Certificate Design which the Group will use to display Credentials. Certificate design needs to exist in the newly cloned space.
+                badge_design_id:
+                  type: number
+                  description: Badge Design which the Group will use to display Credentials. Badge design needs to exist in the newly cloned space.
+                primary_design_id:
+                  type: number
+                  description: Primary Design which the Group will use to display Credentials.
+                meta_data:
+                  type: object
+                  properties: {}
+                  description: You can use this parameter to attach key-value strings to the object. Meta data is useful for storing additional, structured information on an object.
+                learning_outcomes:
+                  description: 'Searchable keywords identifying skills credential-holders need to demonstrate (or have learned) in the process of earning this credential.
+
+
+                    A clone always takes its skills source from the original Group, so framework skills cannot be set here — see the cloning behaviour described above and the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                generate_private_credential:
+                  type: boolean
+                  description: The default value of `Credential.private` for the Group. The supported values are `true`, `false`, and `null`. When this is set to `true` or `false`, it will override `Department.generate_private_credential` and be used as the default of `Credential.private` when creating a new `Credential`. When this is set to `null`, it won't override `Department.generate_private_credential` which will be used for the default of `Credential.private` instead.
+                auto_expiry:
+                  type: number
+                  description: Specifies the number of years or months (see `auto_expiry_unit`) from the issue date after which the credential will automatically expire. If the specified value is less than or equal to 0, it will be ignored.
+                auto_expiry_unit:
+                  type: string
+                  enum:
+                  - years
+                  - months
+                  description: The unit of time for `auto_expiry`. Defaults to `years` if not supplied and `auto_expiry` exists.
+                signup_url:
+                  type: string
+                  description: This provides a direct path for credential viewers to enroll in your course.
+                signup_url_show:
+                  type: boolean
+                  description: Show or hide the sign up url. The supported values are `true`, `false` and `null`.
+                course_link_show:
+                  type: boolean
+                  description: This links the credential data record to your information about the credential on your website. The supported values are `true`, `false` and `null`.
+                organization_link_show:
+                  type: boolean
+                  description: Show or hide the link to your website homepage. The supported values are `true`, `false` and `null`.
+                allow_duplicate_credentials:
+                  type: boolean
+                  description: An email address can receive more than one credential. The supported values are `true` & `false`. Defaults to `false`.
+                skill_category_id:
+                  type: number
+                  description: ID of the skill category to associate with the cloned group.
+                achievement_type:
+                  type: string
+                  description: The type of achievement, for example 'Award' or 'Certification'. The supported values are listed here https://www.imsglobal.org/spec/ob/v3p0#achievementtype-enumeration
+                earning_criteria:
+                  type: array
+                  description: 'Earning criteria for the cloned group. **Omit the key** to copy the original group''s criteria as-is. **Provide an array** to replace them: each item creates a new criterion on the clone (`id` is ignored, since clone never updates an existing criterion).'
+                  items:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                        enum:
+                        - achievement
+                        - certificate
+                        - competency
+                        - completion
+                        - course
+                        - degree
+                        - exam
+                        - experience
+                        - knowledge
+                        - license
+                        - participation
+                        - reading
+                        - skill
+                        - specialization
+                        - other
+                      text:
+                        type: string
+                        description: 'Human-readable description of the criterion. Supports a limited set of HTML tags: `<a>` (with `href`, `title`, `target`, `rel`), `<p>`, `<br>`, `<hr>`, `<ul>`, `<ol>`, `<li>`, `<strong>`/`<b>`, `<em>`/`<i>`, `<u>`, `<sub>`, `<sup>`. Other tags and attributes are stripped on save.'
+                      required:
+                        type: boolean
+                      position:
+                        type: number
+                    required:
+                    - kind
+                    - text
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/issuer/groups/12345/clone\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"group\": {\n    \"name\": \"new group copy\",\n    \"course_name\": \"Intro to Prgramming\",\n    \"course_description\": \"Description of course\",\n    \"course_link\": \"http://www.example.com\",\n    \"language\": \"en\",\n    \"attach_pdf\": true,\n    \"blockchain\": false,\n    \"certificate_design_id\": null,\n    \"badge_design_id\": null,\n    \"primary_design_id\": null,\n    \"meta_data\": {\n      \"batch_id\": \"271\"\n    },\n    \"learning_outcomes\": [\n      \"Reading Books\",\n      \"Writing Essays\"\n    ],\n    \"generate_private_credential\": false,\n    \"auto_expiry\": 1,\n    \"auto_expiry_unit\": \"years\",\n    \"signup_url_show\": false,\n    \"signup_url\": \"http://www.example.com\",\n    \"course_link_show\": false,\n    \"organization_link_show\": false,\n    \"skill_category_id\": 1,\n    \"earning_criteria\": [\n      {\n        \"kind\": \"course\",\n        \"text\": \"Complete the Intro to Programming course\",\n        \"required\": true,\n        \"position\": 1\n      }\n    ]\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Clone a Group
+  /v1/issuer/all_groups:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        course_description:
+                          type: string
+                        course_name:
+                          type: string
+                        learning_outcomes: {}
+                        attach_pdf:
+                          type: boolean
+                        course_link:
+                          type: string
+                        language:
+                          type: string
+                        design_name:
+                          type: string
+                        updated_at:
+                          type: string
+                        created_at:
+                          type: string
+                        design_id:
+                          type:
+                          - number
+                          - 'null'
+                        blockchain:
+                          type: boolean
+                        certificate_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        badge_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        primary_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        department_id:
+                          type: number
+                        meta_data:
+                          type: object
+                          properties:
+                            course_id:
+                              type: string
+                        generate_private_credential:
+                          type: boolean
+                        auto_expiry:
+                          type: number
+                        auto_expiry_unit:
+                          type: string
+                          enum:
+                          - years
+                          - months
+                        signup_url_show:
+                          type: boolean
+                        signup_url:
+                          type: string
+                        course_link_show:
+                          type: boolean
+                        organization_link_show:
+                          type: boolean
+                        skill_category:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                      required:
+                      - id
+                      - name
+                      - course_description
+                      - course_name
+                      - learning_outcomes
+                      - attach_pdf
+                      - course_link
+                      - language
+                      - design_name
+                      - updated_at
+                      - created_at
+                      - blockchain
+                      - design_id
+                      - certificate_design_id
+                      - badge_design_id
+                      - primary_design_id
+                      - department_id
+                      - meta_data
+                      - generate_private_credential
+                      - auto_expiry
+                      - auto_expiry_unit
+                      - signup_url_show
+                      - signup_url
+                      - course_link_show
+                      - organization_link_show
+                      - skill_category
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: number
+                      next_page:
+                        type: number
+                      prev_page: {}
+                      total_pages:
+                        type: number
+                      total_count:
+                        type: number
+              example:
+                groups:
+                - id: 12472
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: 23
+                  badge_design_id: null
+                  primary_design_id: 23
+                  department_id: 123
+                  meta_data:
+                    course_id: TK764
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                - id: 12473
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  attach_pdf: false
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  blockchain: true
+                  design_id: null
+                  certificate_design_id: null
+                  badge_design_id: 345
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data:
+                    course_id: TK765
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                meta:
+                  current_page: 1
+                  next_page: 2
+                  prev_page: null
+                  total_pages: 119
+                  total_count: 238
+      summary: View all Groups
+      operationId: ViewAllGroups
+      description: '**DEPRECATED:** This endpoint is deprecated.'
+      deprecated: true
+      tags:
+      - Groups
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: new group
+              page_size: 50
+              page: 1
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Limit the list of Groups to those named with the given string.
+                page_size:
+                  type: number
+                  description: The pagination response size, defualt is 50.
+                page:
+                  type: number
+                  description: The pagination page.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/issuer/all_groups\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"new group\",\n  \"page_size\": 50,\n  \"page\": 1\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: View all Groups
+  /v1/issuer/groups/search:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: number
+                  description: Limit the list of Groups to those id match the given array.
+                name:
+                  type: string
+                  description: Limit the list of Groups to those named with the given string. Supports partial matching.
+                course_name:
+                  type: string
+                  description: Limit the list of Groups to those whose course name matches the given string. Supports partial matching.
+                department_id:
+                  type: number
+                  description: Limit results to a particular Department. Must be a Department accessible to the API key being used; otherwise a `400 Bad Request` is returned. When omitted, results include all Departments the API key can access.
+                collection_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  description: Limit results to Groups linked to any of the given Collections (OR). Combined with other filters using AND. Must be Collection UUIDs accessible to the API key being used; otherwise a `400 Bad Request` is returned with `One or more Invalid collection IDs`. When omitted, no collection filter is applied. An empty array returns no Groups.
+                meta_data:
+                  type: object
+                  description: Key/values for client's own data on group
+                  additionalProperties:
+                    type: string
+                start_updated_date:
+                  type: string
+                  format: date
+                  description: 'Date after which Groups which have been updated should be returned. Format: YYYY-MM-DD'
+                end_updated_date:
+                  type: string
+                  format: date
+                  description: 'Date before which Groups which have been updated should be returned. Format: YYYY-MM-DD'
+                page_size:
+                  type: number
+                  default: 50
+                  description: The pagination response size, default of 50.
+                page:
+                  type: number
+                  description: The pagination page.
+            example:
+              name: Programming Course
+              course_name: Intro to Programming
+              department_id: 123
+              collection_ids:
+              - 550e8400-e29b-41d4-a716-446655440000
+              meta_data:
+                course_id: CS101
+                department: Computer Science
+              start_updated_date: '2023-01-01'
+              end_updated_date: '2023-12-31'
+              page_size: 25
+              page: 1
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        course_description:
+                          type: string
+                        course_name:
+                          type: string
+                        learning_outcomes:
+                          type: array
+                          items:
+                            type: string
+                        attach_pdf:
+                          type: boolean
+                        course_link:
+                          type: string
+                        language:
+                          type: string
+                        design_name:
+                          type: string
+                        updated_at:
+                          type: string
+                        created_at:
+                          type: string
+                        design_id:
+                          type:
+                          - number
+                          - 'null'
+                        blockchain:
+                          type: boolean
+                        certificate_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        badge_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        primary_design_id:
+                          type:
+                          - number
+                          - 'null'
+                        department_id:
+                          type: number
+                        meta_data:
+                          type: object
+                          properties:
+                            course_id:
+                              type: string
+                        generate_private_credential:
+                          type: boolean
+                        auto_expiry:
+                          type: number
+                        auto_expiry_unit:
+                          type: string
+                          enum:
+                          - years
+                          - months
+                        signup_url_show:
+                          type: boolean
+                        signup_url:
+                          type: string
+                        course_link_show:
+                          type: boolean
+                        organization_link_show:
+                          type: boolean
+                        skill_category:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                        achievement_type:
+                          type: string
+                        collections:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              name:
+                                type: string
+                              description:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - id
+                            - name
+                            - description
+                        earning_criteria:
+                          type: array
+                          description: Criteria the recipient must satisfy to earn this credential, ordered by `position`.
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              kind:
+                                type: string
+                                enum:
+                                - achievement
+                                - certificate
+                                - competency
+                                - completion
+                                - course
+                                - degree
+                                - exam
+                                - experience
+                                - knowledge
+                                - license
+                                - participation
+                                - reading
+                                - skill
+                                - specialization
+                                - other
+                              text:
+                                type: string
+                              required:
+                                type: boolean
+                              position:
+                                type: number
+                            required:
+                            - id
+                            - kind
+                            - text
+                            - required
+                            - position
+                        skill_framework:
+                          type:
+                          - object
+                          - 'null'
+                          description: 'The Skill Framework this Group''s skills come from, with the version pinned on the Group nested under it.
+
+
+                            `null` when the Group uses free-text `learning_outcomes` instead. Present whenever the Group has a framework version pinned — **including a Group that has a framework but no skills attached**, so an object here does not imply that `skills` is non-empty.
+
+
+                            `skill_framework.version.id` is the only place a response reports the Group''s pinned version id, and it is the value to send back as `skill_framework_version_id` when you write. Retiring a version does not move a Group off it; the version changes only when the Group is explicitly migrated to a newly published one, and that applies retroactively to every credential already issued from the Group. See the [Skills Frameworks](#tag/Skills-Frameworks) endpoints.'
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            source_type:
+                              type: string
+                              description: '`external` for a framework maintained by Accredible, `custom` for one uploaded by your organization.'
+                              enum:
+                              - external
+                              - custom
+                            taxonomy:
+                              type:
+                              - string
+                              - 'null'
+                              description: 'The published taxonomy an external framework comes from: `ONET`, `ESCO` or `NACE`. Always `null` for custom frameworks.'
+                            provider:
+                              type:
+                              - string
+                              - 'null'
+                              description: The organization that publishes the framework.
+                            description:
+                              type:
+                              - string
+                              - 'null'
+                            attribution:
+                              type: object
+                              description: Attribution that the framework's licence requires you to display wherever you show its skills.
+                              properties:
+                                text:
+                                  type:
+                                  - string
+                                  - 'null'
+                                url:
+                                  type:
+                                  - string
+                                  - 'null'
+                            version:
+                              type: object
+                              description: 'The framework version pinned on this Group — what it is actually issuing against, not the framework''s latest.
+
+
+                                `status` is the version''s own status. Unlike [View all Skill Frameworks](#operation/View%20all%20Skill%20Frameworks), a version that is mid-retirement for your Department is not re-presented as `retired` here: that endpoint answers whether you can still select the version, whereas a Group records what it already uses.'
+                              properties:
+                                id:
+                                  type: number
+                                version:
+                                  type: string
+                                status:
+                                  type: string
+                        skills:
+                          type: array
+                          description: 'Framework skills attached to this Group, ordered by name. Empty when the Group uses free-text `learning_outcomes`, and when it has a framework selected but no skills that can be tagged — unlike `skill_framework`, this is never `null`.
+
+
+                            Identical to the `skills` array on [Credential](#tag/Credentials) responses: both are built from the same payload, so the two surfaces cannot disagree.
+
+
+                            There is one entry per placement in the framework, so a skill sitting at two positions in the taxonomy appears as two entries — the same `id` with different `breadcrumbs`. **Do not key this array by `id`.**
+
+
+                            This is the read shape, and it differs from the write shape. To set a Group''s skills you send `framework_skills` as `{ id, breadcrumb_ids }` pairs; see [Update a Group](#operation/Update%20a%20Group).'
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              name:
+                                type: string
+                              identifier:
+                                type:
+                                - string
+                                - 'null'
+                                description: The framework's own external identifier for the skill — an O*NET element id, an ESCO URI, or whatever a custom framework was uploaded with. This is the field to match against your own systems. `null` when the framework does not provide one.
+                              description:
+                                type:
+                                - string
+                                - 'null'
+                              url:
+                                type:
+                                - string
+                                - 'null'
+                                description: Link to the skill in the publisher's own taxonomy, when the framework provides one.
+                              breadcrumbs:
+                                type: array
+                                description: 'Where this skill sits in the framework: its ancestors from the root down to its immediate parent, with the skill itself excluded. Empty for a skill that sits at the root of the framework.
+
+
+                                  Each node carries its own external `identifier` alongside its `id` and `name`. To write this placement back on the Group, send these `id` values in the same order as `framework_skills[].breadcrumb_ids`.'
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: number
+                                    name:
+                                      type: string
+                                    identifier:
+                                      type:
+                                      - string
+                                      - 'null'
+                                      description: The ancestor's own external identifier in the framework, when it has one.
+                                  required:
+                                  - id
+                                  - name
+                                  - identifier
+                            required:
+                            - id
+                            - name
+                            - identifier
+                            - description
+                            - url
+                            - breadcrumbs
+                      required:
+                      - id
+                      - name
+                      - course_description
+                      - course_name
+                      - learning_outcomes
+                      - attach_pdf
+                      - course_link
+                      - language
+                      - design_name
+                      - updated_at
+                      - created_at
+                      - blockchain
+                      - design_id
+                      - certificate_design_id
+                      - badge_design_id
+                      - primary_design_id
+                      - department_id
+                      - meta_data
+                      - generate_private_credential
+                      - auto_expiry
+                      - auto_expiry_unit
+                      - signup_url_show
+                      - signup_url
+                      - course_link_show
+                      - organization_link_show
+                      - skill_category
+                      - collections
+                      - earning_criteria
+                      - skill_framework
+                      - skills
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: number
+                      next_page:
+                        type: number
+                      prev_page: {}
+                      total_pages:
+                        type: number
+                      total_count:
+                        type: number
+              example:
+                groups:
+                - id: 12472
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes: null
+                  attach_pdf: true
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  design_id: 23
+                  blockchain: false
+                  certificate_design_id: 23
+                  badge_design_id: null
+                  primary_design_id: 23
+                  department_id: 123
+                  meta_data:
+                    course_id: TK764
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                  achievement_type: null
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0001
+                    kind: course
+                    text: Complete the Intro to Programming course
+                    required: true
+                    position: 1
+                  skill_framework:
+                    id: 44
+                    name: O*NET Skills
+                    source_type: external
+                    taxonomy: ONET
+                    provider: U.S. Department of Labor
+                    description: null
+                    attribution:
+                      text: O*NET is sponsored by the U.S. Department of Labor
+                      url: https://www.onetonline.org/
+                    version:
+                      id: 512
+                      version: '30.0'
+                      status: active
+                  skills:
+                  - id: 59302
+                    name: Active Listening
+                    identifier: 2.A.1.b
+                    description: Giving full attention to what other people are saying, taking time to understand the points being made.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.b
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                  - id: 59301
+                    name: Reading Comprehension
+                    identifier: 2.A.1.a
+                    description: Understanding written sentences and paragraphs in work related documents.
+                    url: https://www.onetonline.org/find/descriptor/result/2.A.1.a
+                    breadcrumbs:
+                    - id: 59298
+                      name: Worker Requirements
+                      identifier: '2'
+                    - id: 59299
+                      name: Basic Skills
+                      identifier: 2.A
+                    - id: 59300
+                      name: Content
+                      identifier: 2.A.1
+                - id: 12473
+                  name: new group
+                  course_description: Desscription of course
+                  course_name: Intro to Programming
+                  learning_outcomes:
+                  - skill one
+                  - skill two
+                  attach_pdf: false
+                  course_link: http://www.example.com
+                  language: en
+                  design_name: test
+                  updated_at: '2016-08-29T07:03:25.000Z'
+                  created_at: '2016-08-29T06:14:18.000Z'
+                  blockchain: true
+                  design_id: null
+                  certificate_design_id: null
+                  badge_design_id: 345
+                  primary_design_id: null
+                  department_id: 123
+                  meta_data:
+                    course_id: TK765
+                  generate_private_credential: false
+                  auto_expiry: 1
+                  auto_expiry_unit: years
+                  signup_url_show: false
+                  signup_url: http://www.example.com
+                  course_link_show: false
+                  organization_link_show: false
+                  skill_category:
+                    id: 1
+                    name: Example Category
+                  achievement_type: null
+                  collections:
+                  - id: 1
+                    name: one
+                    description: null
+                  - id: 2
+                    name: two
+                    description: description example
+                  earning_criteria:
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0201
+                    kind: skill
+                    text: Demonstrate proficiency in Python
+                    required: true
+                    position: 1
+                  - id: 8f3c0c8c-5e1b-4f2a-9c4a-1f2c5c3a0202
+                    kind: exam
+                    text: Pass the final exam with 70% or higher
+                    required: false
+                    position: 2
+                  skill_framework: null
+                  skills: []
+                meta:
+                  current_page: 1
+                  next_page: 2
+                  prev_page: null
+                  total_pages: 119
+                  total_count: 238
+      summary: Search for Groups
+      operationId: SearchForGroups
+      description: ''
+      tags:
+      - Groups
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/issuer/groups/search\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"ids\": [1, 2, 3],\n    \"name\": \"Programming Course\",\n    \"department_id\": 123,\n    \"collection_ids\": [\"550e8400-e29b-41d4-a716-446655440000\"],\n    \"meta_data\": {\n      \"course_id\": \"CS101\",\n      \"department\": \"Computer Science\"\n    },\n    \"start_updated_date\": \"2023-01-01\",\n    \"end_updated_date\": \"2023-12-31\",\n    \"page_size\": 25,\n    \"page\": 1\n  }'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Search for Groups
+  /v1/skill_categories:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: View all Skill Categories
+      operationId: ViewAllSkillCategories
+      description: ''
+      tags:
+      - Groups
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/skill_categories\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View all Skill Categories
 components:
-  schemas:
-    GroupEnvelope:
-      type: object
-      properties:
-        group:
-          $ref: '#/components/schemas/Group'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-    Group:
-      allOf:
-      - $ref: '#/components/schemas/GroupInput'
-      - type: object
-        properties:
-          id:
-            type: integer
-            description: The unique group ID.
-    GroupInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The internal name of the group.
-        course_name:
-          type: string
-          description: The course/achievement name shown to recipients.
-        course_description:
-          type: string
-          description: The course/achievement description.
-        design_id:
-          type: integer
-          description: The Design used to render credentials in this group.
-        language:
-          type: string
-          description: The language code for the group.
-  parameters:
-    GroupId:
-      name: group_id
-      in: path
-      required: true
-      description: The unique ID of the group.
-      schema:
-        type: integer
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
-    tokenAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
+      description: 'Use the format: Token token=YOUR_API_KEY'

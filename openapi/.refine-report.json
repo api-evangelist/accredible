@@ -1,18 +1,22 @@
 {
   "provider": "accredible",
   "sources": [
-    "_original/accredible-openapi.yml"
+    "_original/accredible-openapi.json"
   ],
   "outputs": [
     "accredible-analytics-api-openapi.yml",
+    "accredible-attributes-api-openapi.yml",
+    "accredible-collections-api-openapi.yml",
     "accredible-credentials-api-openapi.yml",
+    "accredible-data-exports-api-openapi.yml",
     "accredible-departments-api-openapi.yml",
     "accredible-designs-api-openapi.yml",
     "accredible-evidence-items-api-openapi.yml",
     "accredible-groups-api-openapi.yml",
-    "accredible-issuer-api-openapi.yml",
+    "accredible-issuers-api-openapi.yml",
     "accredible-references-api-openapi.yml",
     "accredible-sso-api-openapi.yml",
+    "accredible-skills-frameworks-api-openapi.yml",
     "accredible-team-members-api-openapi.yml"
   ],
   "archived": [],
@@ -20,19 +24,8 @@
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "accredible-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "accredible-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+5 apis, 14 total)"
   ],
-  "skipped": [
-    "accredible-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-credentials-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-departments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-designs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-evidence-items-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-issuer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-references-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-sso-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "accredible-team-members-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

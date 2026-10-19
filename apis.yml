@@ -166,24 +166,6 @@ apis:
     url: collections/accredible.postman_collection.json
   - type: OpenCollection
     url: collections/accredible.opencollection.json
-- aid: accredible:accredible-issuer-api
-  name: Accredible Issuer API
-  description: Issuer account details and API token management.
-  humanURL: https://docs.api.accredible.com/
-  baseURL: https://api.accredible.com/v1
-  tags:
-  - Issuer
-  properties:
-  - type: OpenAPI
-    url: openapi/accredible-issuer-api-openapi.yml
-  - type: Documentation
-    url: https://docs.api.accredible.com/
-  - type: APIReference
-    url: https://docs.api.accredible.com/
-  - type: PostmanCollection
-    url: collections/accredible.postman_collection.json
-  - type: OpenCollection
-    url: collections/accredible.opencollection.json
 - aid: accredible:accredible-references-api
   name: Accredible References API
   description: Peer, teacher, or manager endorsements attached to a credential.
@@ -230,6 +212,192 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/accredible-team-members-api-openapi.yml
+  - type: Documentation
+    url: https://docs.api.accredible.com/
+  - type: APIReference
+    url: https://docs.api.accredible.com/
+  - type: PostmanCollection
+    url: collections/accredible.postman_collection.json
+  - type: OpenCollection
+    url: collections/accredible.opencollection.json
+- aid: accredible:accredible-attributes-api
+  name: Accredible Attributes API
+  description: >-
+    Attributes provide a way to add information to certificates/emails. A full guide on Attributes can
+    be found here: https://help.accredible.com/a-quick-guide-to-attributes
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  tags:
+  - Attributes
+  properties:
+  - type: OpenAPI
+    url: openapi/accredible-attributes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.api.accredible.com/
+  - type: APIReference
+    url: https://docs.api.accredible.com/
+  - type: PostmanCollection
+    url: collections/accredible.postman_collection.json
+  - type: OpenCollection
+    url: collections/accredible.opencollection.json
+- aid: accredible:accredible-collections-api
+  name: Accredible Collections API
+  description: >-
+    A Collection is a curated set of groups.
+
+
+    To create one, you'll need to provide a collection name, a description, and indicate whether it should
+    be public or private. Once created, you can assign groups to the collection using the Groups APIs.
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  tags:
+  - Collections
+  properties:
+  - type: OpenAPI
+    url: openapi/accredible-collections-api-openapi.yml
+  - type: Documentation
+    url: https://docs.api.accredible.com/
+  - type: APIReference
+    url: https://docs.api.accredible.com/
+  - type: PostmanCollection
+    url: collections/accredible.postman_collection.json
+  - type: OpenCollection
+    url: collections/accredible.opencollection.json
+- aid: accredible:accredible-data-exports-api
+  name: Accredible Data Exports API
+  description: >-
+    The following endpoints require the `data_exports` feature to be switched on, which is based on your
+    pricing plan.
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  tags:
+  - Data Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/accredible-data-exports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.api.accredible.com/
+  - type: APIReference
+    url: https://docs.api.accredible.com/
+  - type: PostmanCollection
+    url: collections/accredible.postman_collection.json
+  - type: OpenCollection
+    url: collections/accredible.opencollection.json
+- aid: accredible:accredible-issuers-api
+  name: Accredible Issuers API
+  description: The Issuers API from Accredible — 1 operation(s) for issuers.
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  tags:
+  - Issuers
+  properties:
+  - type: OpenAPI
+    url: openapi/accredible-issuers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.api.accredible.com/
+  - type: APIReference
+    url: https://docs.api.accredible.com/
+  - type: PostmanCollection
+    url: collections/accredible.postman_collection.json
+  - type: OpenCollection
+    url: collections/accredible.opencollection.json
+- aid: accredible:accredible-skills-frameworks-api
+  name: Accredible Skills Frameworks API
+  description: >-
+    A Skills Framework is a structured taxonomy of skills. Accredible maintains external frameworks such
+    as O*NET, ESCO and NACE, and your organization can upload its own custom frameworks. Tagging a Group
+    against a framework replaces the free-text `learning_outcomes` list with skills that carry a stable
+    identifier and a known position in a recognized taxonomy.
+
+
+    These endpoints are **read-only**. Uploading frameworks, editing their skills, publishing and retiring
+    versions are all managed in the [Accredible Dashboard](https://dashboard.accredible.com/) — the API
+    lets you discover the frameworks available to you, search their skills, and select those skills on
+    a Group.
+
+
+    ## Frameworks are versioned
+
+
+    You always tag against a **version**, never a framework. Each framework in the list response carries
+    a `versions` array; take the `id` of the version you want and send it as `skill_framework_version_id`
+    when you create or update a Group. Only published versions (`active` and `retired`) are ever returned.
+
+
+    The version's status decides what a write does. Tagging against the `active` version attaches your
+    skills. Tagging against a `retired` version never fails the request — the Group is still created or
+    updated, but the skills are ignored and the response is a `207` with a `version_retired` error.
+
+
+    ## Skills know where they live
+
+
+    A skill sits at a position in its framework's hierarchy, and in some taxonomies it legitimately sits
+    in more than one. The skills search response returns one row per skill with a `breadcrumbs` array
+    — one trail per placement, each trail listing the skill's ancestors from the root down to its immediate
+    parent.
+
+
+    When you attach a skill to a Group you send both the skill `id` and the `breadcrumb_ids` of the trail
+    you mean, so the placement is unambiguous. The ids in a `breadcrumbs` trail are exactly what `breadcrumb_ids`
+    expects — you can copy them straight from a search result into a Group request. Because the pair `(id,
+    breadcrumb_ids)` identifies a placement, the same skill id may appear more than once with different
+    trails.
+
+
+    ## Reading skills back off a credential
+
+
+    You do not need to call these endpoints to display a credential's skills. [Credential](#tag/Credentials)
+    responses carry a `skills` array for the Group the credential was issued from, with each skill's external
+    `identifier` and its `breadcrumbs` trail, so a consumer pulling credentials can render skills without
+    a second request.
+
+
+    The framework those skills belong to is a property of the Group, not of the credential, so it is not
+    repeated on every credential. Follow the credential's `group_id` to [View a Group](#operation/View%20a%20Group)
+    and read `skill_framework` — the Group response carries the same `skills` array alongside it.
+
+
+    The array is empty when the Group uses free-text `learning_outcomes`, when it has a framework selected
+    but no skills that can be tagged, and when the credential has no Group at all.
+
+
+    ## Relationship to existing Group fields
+
+
+    Framework skills and free-text `learning_outcomes` can both be set on a Group; neither is rejected
+    or cleared by the other. Where a credential displays a single skills list, framework skills take precedence.
+    `skill_category_id` is a separate, unrelated classification and is unaffected.
+
+
+    ## Skills that cannot be attached return a 207, not a failed write
+
+
+    When skills cannot be attached — because the version is retired, the framework is not available to
+    the Department, a skill id is not in the version, or a breadcrumb trail is invalid — the Group write
+    does not fail. The Group is still created or updated, every valid skill is attached, the rest are
+    ignored, and each reason is itemized in the `errors` array of a `207 Multi-Status` response. Attachment
+    is per-skill, so one invalid skill does not stop the others from attaching. Read `skill_framework`
+    and `skills` off a `207` response to see exactly what was saved.
+
+
+    There is one exception. If your plan does not include access to skills frameworks and you send framework
+    parameters for a Group that is **already** framework-backed, [Update a Group](#operation/Update%20a%20Group)
+    returns a hard `403` and nothing in the request is saved, including changes to unrelated fields. The
+    Group's framework and skills stay saved and readable, and moving it to free-text skills with `"framework_skills":
+    null` is still allowed.
+
+
+    See [Skills Frameworks Error Handling](#section/Errors/Skills-Frameworks-Error-Handling) for the full
+    list of codes.
+  humanURL: https://docs.api.accredible.com/
+  baseURL: https://api.accredible.com/v1
+  tags:
+  - Skills Frameworks
+  properties:
+  - type: OpenAPI
+    url: openapi/accredible-skills-frameworks-api-openapi.yml
   - type: Documentation
     url: https://docs.api.accredible.com/
   - type: APIReference

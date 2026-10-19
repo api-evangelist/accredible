@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.api.accredible.com/openapi.json",
+ "final": "https://docs.api.accredible.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 607160,
+ "sha256": "1c3f8c587dba4b346261b3f7b9e70a3ffe7c6f7b6ff79dec8f970350e675b7b4",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

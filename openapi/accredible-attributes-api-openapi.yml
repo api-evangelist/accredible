@@ -1,0 +1,209 @@
+openapi: 3.2.0
+info:
+  title: Accredible Credential Attributes API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
+servers:
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
+tags:
+- name: Attributes
+  description: 'Attributes provide a way to add information to certificates/emails. A full guide on Attributes can be found here: https://help.accredible.com/a-quick-guide-to-attributes'
+paths:
+  /v1/attribute_keys:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attribute_key:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      kind:
+                        type: string
+                      department_id:
+                        type: number
+              example:
+                attribute_key:
+                  id: 1234
+                  name: New Custom Attribute Key
+                  kind: text
+                  department_id: 123
+      summary: Create a New Custom Attribute Key
+      operationId: CreateANewCustomAttributeKey
+      description: You may create a Custom Attribute Key using this action. It takes a JSON object containing the name and kind of the attribute key.
+      tags:
+      - Attributes
+      requestBody:
+        content:
+          application/json:
+            example:
+              attribute_key:
+                name: New Custom Attribute Key
+                kind: text
+                department_id: 123
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: A name for the custom attribute key.
+                kind:
+                  type: string
+                  description: The kind of custom attribute key. Must be one of the following - [text, date, email, image]
+                department_id:
+                  type: number
+                  description: Department the custom attribute key should belong to.
+              required:
+              - name
+              - kind
+              - department_id
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/attribute_keys\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"attribute_key\": {\n    \"name\": \"New Custom Attribute Key\",\n    \"kind\": \"text\",\n    \"department_id\": 123\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Create a New Custom Attribute Key
+  /v1/attribute_keys/search:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attribute_keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        kind:
+                          type: string
+                        department_id:
+                          type: number
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: number
+                      next_page: {}
+                      prev_page: {}
+                      total_pages:
+                        type: number
+                      total_count:
+                        type: number
+              example:
+                attribute_keys:
+                - id: 1234
+                  name: New Custom Attribute Key
+                  kind: text
+                  department_id: 123
+                meta:
+                  current_page: 1
+                  next_page: null
+                  prev_page: null
+                  total_pages: 1
+                  total_count: 1
+      summary: Search for Attribute Keys
+      operationId: SearchForAttributeKeys
+      description: You can search for Attribute Keys by various search criteria.
+      tags:
+      - Attributes
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: attribute
+              kind: text
+              department_id: 123
+              page_size: 50
+              page: 1
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: A name for the custom attribute key.
+                kind:
+                  type: string
+                  description: The kind of custom attribute key. Must be one of the following - [text, date, email, image].
+                department_id:
+                  type: number
+                  description: Only return custom attribute keys of the given Department.
+                page_size:
+                  type: number
+                  description: The pagination response size, default of 50.
+                page:
+                  type: number
+                  description: The pagination page.
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/attribute_keys/search\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"attribute\",\n  \"kind\": \"text\",\n  \"department_id\": 123,\n  \"page_size\": 50,\n  \"page\": 1\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Search for Attribute Keys
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Use the format: Token token=YOUR_API_KEY'

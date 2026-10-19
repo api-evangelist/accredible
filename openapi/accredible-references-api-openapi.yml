@@ -1,149 +1,399 @@
 openapi: 3.2.0
 info:
-  title: Accredible References API
-  description: The Accredible API issues, manages, and verifies digital credentials - certificates and Open Badges - programmatically.
-  version: '1.0'
-  contact:
-    name: Accredible
-    url: https://www.accredible.com
-  license:
-    name: Proprietary
-    url: https://www.accredible.com/terms-of-service
+  title: Accredible Credential References API
+  version: 25.08.0
+  description: 'The Accredible Credential API allows you to create and interact with badges and certificates called Accredible Credentials. There are 3 main objects in Accredible: Credentials, Groups and Designs. ### Getting Started with the API - Video Walkthrough
+
+
+    ![Getting Started with the API Video Walkthrough](https://us06web.zoom.us/clips/share/_p4jjy0LQ-WOaQPviLor1A)
+
+
+    # Objects Overview
+
+    ## Credentials
+
+    Credentials are the core object in the API. They collect all of the data related to a course, training activity or achievement and the recipient/participant information. You should create a credential for each achievement completion that a recipient has. For example if John Doe finishes the Programming 101 course we should create one credential to represent that. If John Doe achieves something else then he would need a new credential. ## Groups
+
+
+    Groups represent an achievement such as a course or qualification. They contain information about the achievement and have multiple Credentials attached to them. For example you should create a group for the Introduction to Programming course. You''d provide the Course Name, Course Description and Course URL. In the future you can pass the name or ID of this group when creating a credential so that the credential is passed all the information relating to the achievement. ## Designs
+
+
+    Designs provide a visual specification for how a Credential should be rendered. Designs can be used across multiple Groups. For example if we have three courses: Intro to Basic Programming, Intro to Advanced Programming and Intro to DevOps each of these may have the same design for their Credentials. When creating or updating their corresponding Groups you would attach the desired design accordingly. ## Departments
+
+
+    Departments, if enabled for your account allow you to manage multiple, independent organization groups. Each Department is entirely separate with its own Designs, Groups, Branding, etc. You cannot share data between Departments except Billing and Administrators. ## Attributes
+
+
+    Attributes, are used to merge information with your badge or certificate designs and email templates. Attributes act as placeholders for information and can be added to certificate designs and email templates. ## Skills Frameworks
+
+
+    Skills Frameworks are structured taxonomies of skills — Accredible-maintained ones such as O*NET, ESCO and NACE, plus any your organization uploads itself. Tagging a Group against a framework version replaces the Group''s free-text `learning_outcomes` with skills that carry a stable identifier and a known position in a recognized taxonomy. For example, instead of listing `"Reading Books"` on your Introduction to Programming group, you can attach the O*NET skill `Reading Comprehension` together with the trail it sits on — Worker Requirements → Basic Skills → Content. Frameworks are read-only over the API: you discover the frameworks enabled for a department, search their skills, then select those skills when creating or updating a Group. Uploading and managing frameworks is done in the Accredible Dashboard. # API Keys
+
+
+    API keys are used as Authorization tokens in the header in all authenticated API endpoints. These Keys are managed in the Accredible Dashboard. There are two types of API Keys, those that are account wide and work on all assets and those that are related to a specific department. API keys scoped to a specific department can only access the resources (Credentials, Groups, Designs etc.) belonging to that department. # Single sign-on options
+
+
+    Single sign-on in addition to the student authentication provided by Accredible, you can also use single sign-on to authenticate your student into Accredible and they can directly sign-in. SSO is also available via our Integrations and via SAML 2.0. # Rate Limiting
+
+
+    We allow up to 2000 requests every 5 minutes from a single IP address, but some higher security endpoints have stricter rate limiting. Requests are counted in 30 second periods.'
 servers:
-- url: https://api.accredible.com/v1
-  description: Production
-- url: https://sandbox.api.accredible.com/v1
-  description: Sandbox
-security:
-- tokenAuth: []
+- url: https://api.accredible.com/
+  description: Production environment - US
+- url: https://eu.api.accredible.com/
+  description: Production environment - EU
+- url: https://sandbox.api.accredible.com/
+  description: Sandbox environment - Testing environment
 tags:
 - name: References
-  description: Peer, teacher, or manager endorsements attached to a credential.
+  description: Resources related to References. References provide more information about how the recipient met an achievement. Typically this would be a peer, teacher or manager giving their feedback.
 paths:
-  /credentials/{credential_id}/references:
+  /v1/credentials/{credential_id}/references:
     post:
-      operationId: createReference
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reference:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      description:
+                        type: string
+                      referee:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          avatar:
+                            type: string
+                      supplemental:
+                        type: boolean
+                      relationship:
+                        type: string
+              example:
+                reference:
+                  id: 1234
+                  description: John worked hard on this course and provided exemplary understanding of the core concepts
+                  referee:
+                    name: Jane Doe
+                    email: jdoe@example.com
+                    avatar: https://www.example.com/avatars/janedoe.png
+                  supplemental: false
+                  relationship: managed
+      summary: Create a New Reference
+      operationId: CreateANewReference
+      description: You may create a Reference using this action. It takes a JSON object containing a Reference.
       tags:
       - References
-      summary: Create a reference
-      description: Attaches a new Reference (endorsement) to a credential.
       parameters:
-      - $ref: '#/components/parameters/CredentialIdPath'
-      requestBody:
+      - name: credential_id
+        in: path
+        description: ID of the Credential in the form of a string integer for the particular Credential requested.
         required: true
+        schema:
+          type: string
+      requestBody:
         content:
           application/json:
+            example:
+              reference:
+                description: John worked hard on this course and provided exemplary understanding of the core concepts
+                referee:
+                  name: Jane Doe
+                  email: person@example.com
+                relationship: managed
             schema:
               type: object
               properties:
                 reference:
-                  $ref: '#/components/schemas/ReferenceInput'
-      responses:
-        '200':
-          description: The created reference.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /credentials/{credential_id}/references/{reference_id}:
-    parameters:
-    - $ref: '#/components/parameters/CredentialIdPath'
-    - name: reference_id
-      in: path
-      required: true
-      schema:
-        type: integer
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      description: The reference comments / text.
+                    relationship:
+                      type: string
+                      enum:
+                      - taught
+                      - managed
+                      - mentored
+                      - worked
+                      - studied
+                      - friends
+                      - stranger
+                      - professor
+                      description: 'Must be one of: "taught", "managed", "mentored", "worked", "studied", "friends", "stranger", "professor".'
+                    referee:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the person providing the reference.
+                        email:
+                          type: string
+                          description: Email of the person providing the reference.
+                        avatar:
+                          type: string
+                          description: URL of image of the person providing the reference.
+                        url:
+                          type: string
+                          description: URL of a social profile such as LinkedIn that would allow a viewer to learn more about the referee.
+                    position:
+                      type: number
+                      description: The numeric position of the evidence item on the credential. 0 is displayed first in the list.
+                  required:
+                  - description
+                  - relationship
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X POST \\\n  \"https://api.accredible.com/v1/credentials/12345/references\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"reference\": {\n    \"description\": \"John worked hard on this course and provided exemplary understanding of the core concepts\",\n    \"referee\": {\n      \"name\": \"Jane Doe\",\n      \"email\": \"person@example.com\"\n    },\n    \"relationship\": \"managed\"\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Create a New Reference
+  /v1/credentials/{credential_id}/references/{reference_id}:
     get:
-      operationId: getReference
-      tags:
-      - References
-      summary: View a reference
-      description: Retrieves a single Reference on a credential.
       responses:
         '200':
-          description: The requested reference.
-        '404':
-          $ref: '#/components/responses/NotFound'
-    put:
-      operationId: updateReference
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reference:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      description:
+                        type: string
+                      referee:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          avatar:
+                            type: string
+                      supplemental:
+                        type: boolean
+                      relationship:
+                        type: string
+              example:
+                reference:
+                  id: 1234
+                  description: John worked hard on this course and provided exemplary understanding of the core concepts
+                  referee:
+                    name: Jane Doe
+                    email: jdoe@example.com
+                    avatar: https://www.example.com/avatars/janedoe.png
+                  supplemental: false
+                  relationship: managed
+      summary: View a Reference
+      operationId: ViewAReference
       tags:
       - References
-      summary: Update a reference
-      description: Updates a Reference on a credential.
-      requestBody:
+      parameters:
+      - name: credential_id
+        in: path
+        description: ID of the Credential in the form of a string or integer for the particular Credential requested.
         required: true
+        schema:
+          type: string
+      - name: reference_id
+        in: path
+        description: ID of the Reference in the form of an integer.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X GET \\\n  \"https://api.accredible.com/v1/credentials/12345/references/1234\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: View a Reference
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reference:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      description:
+                        type: string
+                      referee:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          avatar:
+                            type: string
+                      supplemental:
+                        type: boolean
+                      relationship:
+                        type: string
+              example:
+                reference:
+                  id: 1234
+                  description: John worked hard on this course and provided exemplary understanding of the core concepts
+                  referee:
+                    name: Jane Doe
+                    email: jdoe@example.com
+                    avatar: https://www.example.com/avatars/janedoe.png
+                  supplemental: false
+                  relationship: managed
+      summary: Update a Reference
+      operationId: UpdateAReference
+      tags:
+      - References
+      parameters:
+      - name: credential_id
+        in: path
+        description: ID of the Credential in the form of a string or integer for the particular Credential requested.
+        required: true
+        schema:
+          type: string
+      - name: reference_id
+        in: path
+        description: ID of the Reference in the form of an integer.
+        required: true
+        schema:
+          type: number
+      requestBody:
         content:
           application/json:
+            example:
+              reference:
+                description: my new reference text
             schema:
               type: object
               properties:
                 reference:
-                  $ref: '#/components/schemas/ReferenceInput'
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      description: The reference comments / text.
+                    relationship:
+                      type: string
+                      enum:
+                      - taught
+                      - managed
+                      - mentored
+                      - worked
+                      - studied
+                      - friends
+                      - stranger
+                      - professor
+                      description: 'Must be one of: "taught", "managed", "mentored", "worked", "studied", "friends", "stranger", "professor".'
+                    position:
+                      type: number
+                      description: The numeric position of the evidence item on the credential. 0 is displayed first in the list.
+                  required:
+                  - description
+                  - relationship
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X PUT \\\n  \"https://api.accredible.com/v1/credentials/12345/references/1234\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"reference\": {\n    \"description\": \"my new reference text\"\n  }\n}'"
+      x-operation-id-source: normalized
+      x-operation-id-original: Update a Reference
+    delete:
       responses:
         '200':
-          description: The updated reference.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-    delete:
-      operationId: deleteReference
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reference:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      description:
+                        type: string
+                      referee:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          avatar:
+                            type: string
+                      supplemental:
+                        type: boolean
+                      relationship:
+                        type: string
+              example:
+                reference:
+                  id: 1234
+                  description: John worked hard on this course and provided exemplary understanding of the core concepts
+                  referee:
+                    name: Jane Doe
+                    email: jdoe@example.com
+                    avatar: https://www.example.com/avatars/janedoe.png
+                  supplemental: false
+                  relationship: managed
+      summary: Delete a Reference
+      operationId: DeleteAReference
       tags:
       - References
-      summary: Delete a reference
-      description: Deletes a Reference from a credential.
-      responses:
-        '200':
-          description: The reference was deleted.
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+      parameters:
+      - name: credential_id
+        in: path
+        description: ID of the Credential in the form of a string or integer for the particular Credential requested.
+        required: true
+        schema:
+          type: string
+      - name: reference_id
+        in: path
+        description: ID of the Reference in the form of an integer.
+        required: true
+        schema:
+          type: number
+      security:
+      - ApiKeyAuth: []
+      x-code-samples:
+      - lang: cURL
+        label: cURL
+        source: "curl -X DELETE \\\n  \"https://api.accredible.com/v1/credentials/12345/references/1234\" \\\n  -H \"Authorization: Token token=YOUR_API_KEY\""
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete a Reference
 components:
-  schemas:
-    ReferenceInput:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the person giving the reference.
-        email:
-          type: string
-          description: The email of the referee.
-        body:
-          type: string
-          description: The reference text.
-        hidden:
-          type: boolean
-          description: Whether the reference is hidden.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A human-readable error message.
-        errors:
-          type: array
-          items:
-            type: string
-  responses:
-    Unauthorized:
-      description: Invalid or missing API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    CredentialIdPath:
-      name: credential_id
-      in: path
-      required: true
-      description: The unique ID of the credential.
-      schema:
-        type: integer
   securitySchemes:
-    tokenAuth:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: API key sent in the Authorization header using the scheme `Token token=YOUR_API_KEY`.
+      description: 'Use the format: Token token=YOUR_API_KEY'
