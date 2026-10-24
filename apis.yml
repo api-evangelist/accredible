@@ -251,6 +251,8 @@ apis:
   humanURL: https://docs.api.accredible.com/
   baseURL: https://api.accredible.com/v1
   tags:
+  - Collection
+  tags_raw:
   - Collections
   properties:
   - type: OpenAPI
@@ -271,6 +273,8 @@ apis:
   humanURL: https://docs.api.accredible.com/
   baseURL: https://api.accredible.com/v1
   tags:
+  - Data Export
+  tags_raw:
   - Data Exports
   properties:
   - type: OpenAPI
