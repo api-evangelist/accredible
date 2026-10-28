@@ -1,4 +1,4 @@
-# Accredible (accredible)
+# Accredible
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,181 +66,135 @@
 
 Accredible is a digital credentialing platform for issuing, managing, and verifying digital certificates and Open Badges. The REST API lets issuers create and update credentials (certificates and badges) for recipients, organize them into Groups (courses/achievements), apply reusable visual Designs, attach Evidence Items and References, generate PDFs and blockchain-verifiable records, pull engagement analytics, manage Departments and Team Members, and generate recipient SSO links. Credentials are issued against a Group and rendered with a Design; the platform hosts a public verification page and share links for each credential.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/accredible/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/accredible/refs/heads/main/apis.yml)
+**Areas:** Digital Credentials · Certificates · Badges · Open Badges · Credentialing · Verification · Digital Badges
 
-Base URL: `https://api.accredible.com/v1` (sandbox: `https://sandbox.api.accredible.com/v1`). Authentication is an API key sent in the `Authorization` header using the scheme `Token token=YOUR_API_KEY`.
+## Accredible on APIs.io
 
-## Tags
+Everything profiled for Accredible is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/accredible/](https://apis.io/providers/accredible/)** — or go straight to one of the APIs or properties below.
 
-- Digital Credentials
-- Certificates
-- Badges
-- Open Badges
-- Credentialing
-- Verification
-- Digital Badges
+### APIs (10)
 
-## Timestamps
+- [Accredible Analytics API](https://apis.io/apis/accredible/accredible-analytics-api/) — Issuer-level and per-credential engagement analytics.
+- [Accredible Credentials API](https://apis.io/apis/accredible/accredible-credentials-api/) — Issue, retrieve, update, delete, search, and verify digital credentials.
+- [Accredible Departments API](https://apis.io/apis/accredible/accredible-departments-api/) — Independent sub-organizations within an issuer account.
+- [Accredible Designs API](https://apis.io/apis/accredible/accredible-designs-api/) — Reusable visual specifications for rendering badges and certificates.
+- [Accredible Evidence Items API](https://apis.io/apis/accredible/accredible-evidence-items-api/) — Supplemental work samples attached to a credential.
+- [Accredible Groups API](https://apis.io/apis/accredible/accredible-groups-api/) — Course or achievement containers that credentials are issued against.
+- [Accredible Issuer API](https://apis.io/apis/accredible/accredible-issuer-api/) — Issuer account details and API token management.
+- [Accredible References API](https://apis.io/apis/accredible/accredible-references-api/) — Peer, teacher, or manager endorsements attached to a credential.
+- [Accredible SSO API](https://apis.io/apis/accredible/accredible-sso-api/) — Recipient single sign-on link generation.
+- [Accredible Team Members API](https://apis.io/apis/accredible/accredible-team-members-api/) — Administrators and roles within the issuer account.
 
-- **Created:** 2026-07-05
-- **Modified:** 2026-07-05
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### Accredible Credentials API
+#### Agentic access (1)
 
-Create, retrieve, update, and delete digital credentials (certificates and badges), bulk-create credentials, search credentials, generate credential PDFs, resolve credential redirects, verify blockchain records, and pull per-credential analytics. Each credential is issued to a recipient against a Group.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
+- [Accredible Agentic Access](https://apis.io/agentic-access/accredible/accredible-agentic-access/)
 
-#### Tags
+#### Collections (11)
 
-- Credentials
-- Certificates
-- Badges
-- Issuing
+Postman and Open Collection request collections.
 
-#### Properties
+- [Accredible API](https://apis.io/collections/accredible/open-accredible/)
+- [Accredible Analytics API](https://apis.io/collections/accredible/open-accredible-analytics-api/)
+- [Accredible Analytics Credentials API](https://apis.io/collections/accredible/open-accredible-credentials-api/)
+- [Accredible Analytics Departments API](https://apis.io/collections/accredible/open-accredible-departments-api/)
+- [Accredible Analytics Designs API](https://apis.io/collections/accredible/open-accredible-designs-api/)
+- [Accredible Analytics Evidence Items API](https://apis.io/collections/accredible/open-accredible-evidence-items-api/)
+- [Accredible Analytics Groups API](https://apis.io/collections/accredible/open-accredible-groups-api/)
+- [Accredible Analytics Issuer API](https://apis.io/collections/accredible/open-accredible-issuer-api/)
+- [Accredible Analytics References API](https://apis.io/collections/accredible/open-accredible-references-api/)
+- [Accredible Analytics SSO API](https://apis.io/collections/accredible/open-accredible-sso-api/)
+- [Accredible Analytics Team Members API](https://apis.io/collections/accredible/open-accredible-team-members-api/)
 
-- [Documentation](https://docs.api.accredible.com/)
-- [API Reference](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Security (3)
 
-### Accredible Groups API
+Authentication, trust centre, and vulnerability disclosure.
 
-Manage Groups - the course or achievement containers that credentials are issued against. Create, retrieve, update, delete, list, and search Groups under the issuer account.
+- [Accredible Authentication](https://apis.io/security/accredible/accredible-authentication/)
+- [Accredible Domain Security](https://apis.io/security/accredible/accredible-domain-security/)
+- [Accredible Trust Center](https://apis.io/security/accredible/accredible-trust-center/)
 
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
+#### Plans and pricing (1)
 
-#### Tags
+Published plans, tiers and prices.
 
-- Groups
-- Courses
-- Achievements
+- [Accredible Plans Pricing](https://apis.io/plans/accredible/accredible-plans-pricing/)
 
-#### Properties
+#### Rate limits (1)
 
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published request limits.
 
-### Accredible Designs API
+- [Accredible Rate Limits](https://apis.io/rate-limits/accredible/accredible-rate-limits/)
 
-Create, retrieve, update, delete, copy, search, and preview reusable visual Designs that specify how a credential (badge or certificate) is rendered, and initialize the embedded badge and certificate designer experiences. A Design can be reused across multiple Groups.
+#### FinOps (1)
 
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
+What the API costs to run, by operation.
 
-#### Tags
+- [Accredible Finops](https://apis.io/finops/accredible/accredible-finops/)
 
-- Designs
-- Badges
-- Certificates
-- Templates
+## Where to find this API
 
-#### Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Accredible Evidence and References API
-
-Attach richer proof to a credential. Create, retrieve, update, and delete Evidence Items (work samples and artifacts) and References (peer, teacher, or manager endorsements) nested under an individual credential.
-
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
-
-#### Tags
-
-- Evidence
-- References
-- Supplemental
-
-#### Properties
-
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Accredible Analytics API
-
-Retrieve issuer-level engagement analytics across credentials - views, shares, and other interaction metrics - to measure the reach of issued certificates and badges.
-
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
-
-#### Tags
-
-- Analytics
-- Engagement
-- Reporting
-
-#### Properties
-
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Accredible Departments and Team Members API
-
-Administer an issuer organization. Search Departments (independent sub-organizations with their own Designs, Groups, and branding) and create, retrieve, update, and delete Team Members and their roles.
-
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
-
-#### Tags
-
-- Departments
-- Team Members
-- Administration
-
-#### Properties
-
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Accredible Issuer and SSO API
-
-Read issuer account details and generate recipient single sign-on (SSO) links that let a recipient access their credentials, plus rotate the account API token.
-
-- **Human URL:** [https://docs.api.accredible.com/](https://docs.api.accredible.com/)
-- **Base URL:** `https://api.accredible.com/v1`
-
-#### Tags
-
-- Issuer
-- SSO
-- Recipients
-
-#### Properties
-
-- [Documentation](https://docs.api.accredible.com/)
-- [OpenAPI](openapi/accredible-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/accredible.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/accredible.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/accredible)
-- [LinkedIn](https://www.linkedin.com/company/accredible)
 - [Website](https://www.accredible.com)
 - [Documentation](https://docs.api.accredible.com/)
-- [Plans](plans/accredible-plans-pricing.yml)
-- [Rate Limits](rate-limits/accredible-rate-limits.yml)
-- [Fin Ops](finops/accredible-finops.yml)
+- [Blog](https://www.accredible.com/blog)
+- [GitHub](https://github.com/accredible)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 27.0** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 53.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 15.5 |
+| Access clarity | 15.8 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 16.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/accredible/](https://apis.io/providers/accredible/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Accredible: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/accredible/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
